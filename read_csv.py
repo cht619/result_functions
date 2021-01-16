@@ -45,7 +45,7 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
 
             print(' {} The M0 Accuracy: {:.3f}'.format(csv_file[:3], float(csv_reader[1][0])))
 
-            for i in range(16):
+            for i in range(len(csv_reader) // 12):
                 i = 12*i
                 data_list = csv_reader[i+2 : i+2+n_data_mean]
                 data_list = [float(data[0]) for data in data_list]
@@ -64,7 +64,7 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
 
 if __name__ == '__main__':
     # get_mean(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\SSDA')
-    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\Clustering_Train\1_14_0.1')
+    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\Clustering_Train\678')
 
     # with open(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\DAN\E_B.csv', 'r') as f:
     #     reader = csv.reader(f)
