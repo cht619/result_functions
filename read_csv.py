@@ -10,6 +10,7 @@
 import numpy as np
 import csv
 import os
+import re
 
 
 def get_mean(root_path, n_data_mean=14):
@@ -38,6 +39,7 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
     # 第二行是
 
     csv_files = os.listdir(root_path)
+    pattern = re.compile(r'\d\|\|\d')
 
     for csv_file in csv_files:
         with open(r'{}/{}'.format(root_path, csv_file), 'r') as f:
@@ -49,6 +51,9 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
                 i = 12*i
                 data_list = csv_reader[i+2 : i+2+n_data_mean]
                 data_list = [float(data[0]) for data in data_list]
+                # get clusters
+                information = csv_reader[i][0]
+                clusters = pattern.findall(information)[0]
                 print('{:.3}'.format(np.mean(data_list)))
 
 
@@ -64,7 +69,7 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
 
 if __name__ == '__main__':
     # get_mean(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\SSDA')
-    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\Clustering_Train\678')
+    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\5678')
 
     # with open(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\DAN\E_B.csv', 'r') as f:
     #     reader = csv.reader(f)
