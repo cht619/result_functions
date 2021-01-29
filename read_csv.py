@@ -69,20 +69,4 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
 
 if __name__ == '__main__':
     # get_mean(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\SSDA')
-    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\23456')
-
-    # with open(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\DAN\E_B.csv', 'r') as f:
-    #     reader = csv.reader(f)
-    #
-    #     data_list0 = []
-    #     data_list1 = []
-    #
-    #     for i, row in enumerate(reader):
-    #         if i < 5:
-    #             data_list0.append(float(row[0]))
-    #         elif i > 5:
-    #             data_list1.append(float(row[0]))
-    #
-    # data_list1.sort(reverse=True)
-    # print(data_list1)
-    # print(np.mean(data_list1[:14]))
+    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\1.28')
