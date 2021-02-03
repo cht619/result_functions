@@ -42,6 +42,7 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
     pattern = re.compile(r'\d\|\|\d')
 
     for csv_file in csv_files:
+        result = []
         with open(r'{}/{}'.format(root_path, csv_file), 'r') as f:
             csv_reader = list(csv.reader(f))
 
@@ -54,7 +55,12 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
                 # get clusters
                 information = csv_reader[i][0]
                 clusters = pattern.findall(information)[0]
-                print('{:.3}({})'.format(np.mean(data_list), clusters))
+                # print('{:.3}({})'.format(np.mean(data_list), clusters))
+                result.append([np.mean(data_list), clusters])
+
+        result.sort(key=lambda x: x[0], reverse=True)
+        for i in result:
+            print('{:.3}({})'.format(i[0], i[1]))
 
 
         #     for i, row in enumerate(csv_reader):
@@ -69,4 +75,7 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
 
 if __name__ == '__main__':
     # get_mean(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\SSDA')
-    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\1.28')
+    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\Clustering_Train\greedy\0.03')
+    # a = [1,2,3,4,5]
+    # a.sort(reverse=True)
+    # print(a)
