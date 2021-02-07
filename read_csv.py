@@ -13,24 +13,39 @@ import os
 import re
 
 
-def get_mean(root_path, n_data_mean=14):
+def get_mean_standard_deviation(root_path, n_data_mean=14):
     csv_files = os.listdir(root_path)
+    all_result = []
 
     for csv_file in csv_files:
         with open(r'{}/{}'.format(root_path, csv_file), 'r') as f:
             csv_reader = csv.reader(f)
-            data_list_Dtl0 = []
-            data_list_Dtl3 = []
+            # n Dtl
+            data_list_Dtl_0 = []
+            data_list_Dtl_3 = []
 
             for i, row in enumerate(csv_reader):
-                if i < 0:
-                    data_list_Dtl0.append(float(row[0]))
+                if i < 5:
+                    data_list_Dtl_0.append(float(row[0]))
                 elif i > 5:
-                    data_list_Dtl3.append(float(row[0]))
+                    data_list_Dtl_3.append(float(row[0]))
 
-        data_list_Dtl3.sort(reverse=True)
-        # print('{}: {:.3}({:.3})'.format(csv_file[:3], np.mean(data_list_Dtl3[:n_data_mean]), np.mean(data_list_Dtl0)))
-        print('{}:{:.3}'.format(csv_file[:3],  np.mean(data_list_Dtl3[:n_data_mean])))
+        data_list_Dtl_3.sort(reverse=True)
+
+        result = '{:.3}±{:.1}({:.3}±{:.1})'.format(np.mean(data_list_Dtl_3[:n_data_mean]) * 100,
+                  np.std(data_list_Dtl_3[:n_data_mean], ddof=1)* 100,
+                np.mean(data_list_Dtl_0[:])* 100, np.std(data_list_Dtl_0[:], ddof=1)* 100)
+        all_result.append(result)
+
+        print('{}'.format(csv_file[:3]), end=' ')
+
+        # print('{}:{:.3}±{:.1}({:.3}±{:.1})'.
+        #       format(csv_file[:3], np.mean(data_list_Dtl_3[:n_data_mean]) * 100,
+        #           np.std(data_list_Dtl_3[:n_data_mean], ddof=1)* 100,
+        #         np.mean(data_list_Dtl_0[:])* 100, np.std(data_list_Dtl_0[:], ddof=1)* 100))
+    print('\n')
+    for result in all_result:
+        print(result, end='\t')
 
 
 def get_mean_clustering_train(root_path, n_data_mean=10):
@@ -74,8 +89,5 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
         # print('{}:{:.3}'.format(csv_file[:3],  np.mean(data_list_Dtl3[:n_data_mean])))
 
 if __name__ == '__main__':
-    # get_mean(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\SSDA')
-    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\Clustering_Train\greedy\0.03')
-    # a = [1,2,3,4,5]
-    # a.sort(reverse=True)
-    # print(a)
+    get_mean_standard_deviation(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\CDAN')
+    # get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\Clustering_Train\greedy\0.03\Greedy_normalization_max_noDlr')
