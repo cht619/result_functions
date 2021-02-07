@@ -32,9 +32,13 @@ def get_mean_standard_deviation(root_path, n_data_mean=14):
 
         data_list_Dtl_3.sort(reverse=True)
 
-        result = '{:.3}±{:.1}({:.3}±{:.1})'.format(np.mean(data_list_Dtl_3[:n_data_mean]) * 100,
-                  np.std(data_list_Dtl_3[:n_data_mean], ddof=1)* 100,
-                np.mean(data_list_Dtl_0[:])* 100, np.std(data_list_Dtl_0[:], ddof=1)* 100)
+        std_3 = np.std(data_list_Dtl_3[:n_data_mean], ddof=1)* 100
+        std_0 = np.std(data_list_Dtl_0[:], ddof=1)* 100
+
+        result = '{:.3}±{:.1f}({:.3}±{:.1f})'.format(np.mean(data_list_Dtl_3[:n_data_mean]) * 100,
+                  std_3,
+                np.mean(data_list_Dtl_0[:])* 100,
+                std_0)
         all_result.append(result)
 
         print('{}'.format(csv_file[:3]), end=' ')
