@@ -39,6 +39,9 @@ def get_mean_standard_deviation(root_path, n_data_mean=14):
                   std_3,
                 np.mean(data_list_Dtl_0[:])* 100,
                 std_0)
+        # TAT
+        # result = '{:.3}±{:.1f}'.format(np.mean(data_list_Dtl_0[:]) * 100, std_0)
+        # result = '{:.3}±{:.1f}'.format(np.mean(data_list_Dtl_3[:]) * 100, std_3)
         all_result.append(result)
 
         print('{}'.format(csv_file[:3]), end=' ')
@@ -80,26 +83,33 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
     csv_files = os.listdir(root_path)
     pattern = re.compile(r'\d\|\|\d')
 
-    for csv_file in csv_files:
-        result = []
+    for csv_file in csv_files: # 一个文件的
+        all_result = []
+        all_std = []
         with open(r'{}/{}'.format(root_path, csv_file), 'r') as f:
             csv_reader = list(csv.reader(f))
 
-            print(' {} The M0 Accuracy: {:.3f}'.format(csv_file[:5], float(csv_reader[1][0])))
 
-            for i in range(len(csv_reader) // 12):
+            # print(' {} The M0 Accuracy: {:.3f}'.format(csv_file[:5], float(csv_reader[1][0])), end=' ')
+
+            for i in range(len(csv_reader) // 12):  # 一个文件
                 i = 12*i
                 data_list = csv_reader[i+2 : i+2+n_data_mean]
                 data_list = [float(data[0]) for data in data_list]
                 # get clusters
                 information = csv_reader[i][0]
                 clusters = pattern.findall(information)[0]
-                # print('{:.3}({})'.format(np.mean(data_list), clusters))
-                result.append([np.mean(data_list), clusters])
+                std = np.std(data_list[:n_data_mean], ddof=1) * 100
+                # all_result.append([np.mean(data_list), clusters])
+                result = np.mean(data_list) * 100
+                all_result.append(result)
+                all_std.append(std)
 
-        result.sort(key=lambda x: x[0], reverse=True)
-        for i in result:
-            print('{:.3}({})'.format(i[0], i[1]))
+        # all_result.sort(key=lambda x: x[0], reverse=True)
+        # for i in all_result:
+        #     print('{:.3}({})'.format(i[0], i[1]))
+        max_index = np.argmax(all_result)
+        print('{:.1f}±{:.1f}'.format(all_result[int(max_index)], all_std[int(max_index)]), end='\t')
 
 
         #     for i, row in enumerate(csv_reader):
@@ -113,5 +123,5 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
         # print('{}:{:.3}'.format(csv_file[:3],  np.mean(data_list_Dtl3[:n_data_mean])))
 
 if __name__ == '__main__':
-    get_mean_standard_deviation_SSDA(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\SSDA')
-    # get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\Clustering_Train\greedy\0.03\Greedy_normalization_max_noDlr')
+    # get_mean_standard_deviation_SSDA(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\SSDA')
+    get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\Clustering_Train\greedy\0.03\Greedy_normalization_max_noDlr')
