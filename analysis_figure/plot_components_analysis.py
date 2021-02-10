@@ -18,7 +18,7 @@ import csv
 color = ['b', 'r', 'g', 'c', 'y', '#0000CD', '#FFFAFA']
 
 
-def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, figure_index, title):
+def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, figure_index, title, fea_type=None):
     #设置x轴取值
     xedges = np.array(components_of_Ds_list)
     #设置y轴取值
@@ -51,7 +51,17 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
     # xticks是坐标的名字
     ax.set_xlim(0, 10)  # 同样设置刻度值
     ax.set_ylim(0, 10)  # 同样设置刻度值
-    # ax.set_zlim(0.7, 1.0)
+    if fea_type == 'DeCAF6':
+        min_accuracy = np.min(accuracy_list)
+        low = min_accuracy // 0.1 / 10
+        # ax.set_zlim(low, 1.0)
+        dz = [data - low for data in dz]
+        print(low, dz)
+        # ax.set_zticks()  # 这个是刻度范围
+        ax.set_zticklabels(['{:.2f}'.format(low + step) for step in np.arange(0.01, 0.1, 0.01)])
+
+    elif fea_type == 'C_I':
+        ax.set_zlim(0.7, 1.0)
     ax.view_init(elev=45., azim=45)
 
     # x, y, z: array - like
@@ -79,19 +89,19 @@ def Figure():
     plt.title('Analysis')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path = r'E:\cht_project\Experimental_Result\ER\Office_Caltech_DeCAF6\Clustering_Train',
-        domain_name='A_C'
+        root_path = r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+        domain_name='A_C',
     )
-    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 231, '(a)A-C')
+    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 231, '(a)A-C', fea_type='DeCAF6')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Office_Caltech_DeCAF6\Clustering_Train',
-        domain_name='D_A'
+        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+        domain_name='C_A'
     )
-    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 232, '(b)D-A')
+    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 232, '(b)D-A', fea_type='DeCAF6')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\Clustering_Train\greedy\1_27',
+        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
         domain_name='C_I'
     )
     get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 233, '(c)C-I')
@@ -113,6 +123,10 @@ def Figure():
         domain_name='train_vali'
     )
     get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 236, '(f)train_vali')
+
+    # plt.gca().get_xaxis().set_visible(False)
+    # plt.gca().get_yaxis().set_visible(False)
+    plt.axis('off')
 
     # plt.tight_layout(pad=0.4, w_pad=1, h_pad=1.0)
     fig.tight_layout(pad=1.0, w_pad=10.0, h_pad=10.0)
@@ -150,8 +164,11 @@ def get_mean_clustering_train_plot(root_path, domain_name, n_data_mean=10):
 
 
 if __name__ == '__main__':
-    accuracy_list, components_of_Ds_list, components_of_Dt_list =   get_mean_clustering_train_plot(
-        r'E:\cht_project\Experimental_Result\ER\Office_Caltech_DeCAF6\Clustering_Train',
-                                   domain_name='D_A')
+    # accuracy_list, components_of_Ds_list, components_of_Dt_list =   get_mean_clustering_train_plot(
+    #     r'E:\cht_project\Experimental_Result\ER\Office_Caltech_DeCAF6\Clustering_Train',
+    #                                domain_name='D_A')
     # get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list)
     Figure()
+    # s = np.min(accuracy_list)
+    # print(s, s//0.1 / 10)
+    print(np.arange(0.01, 0.1, 0.01))
