@@ -2,7 +2,7 @@
 # @Time : 2021/2/8 20:29
 # @Author : CHT
 # @Site : 
-# @File : plot_Office_Home.py
+# @File : plot_components_analysis.py
 # @Software: PyCharm 
 # @Blog: https://www.zhihu.com/people/xia-gan-yi-dan-chen-hao-tian
 # @Function:
@@ -75,7 +75,7 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
 
 
 def Figure():
-    fig = plt.figure(dpi=100)
+    fig = plt.figure(figsize=(16, 12))
     plt.title('Analysis')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
@@ -115,7 +115,7 @@ def Figure():
     get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 236, '(f)train_vali')
 
     # plt.tight_layout(pad=0.4, w_pad=1, h_pad=1.0)
-    fig.tight_layout()
+    fig.tight_layout(pad=1.0, w_pad=10.0, h_pad=10.0)
     plt.savefig('./analysis.jpg')
     plt.show()
 
