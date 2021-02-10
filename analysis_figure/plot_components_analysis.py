@@ -87,6 +87,7 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
 def Figure():
     fig = plt.figure(figsize=(16, 12))
     plt.title('Analysis')
+    plt.axis('off')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
         root_path = r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
@@ -126,7 +127,9 @@ def Figure():
 
     # plt.gca().get_xaxis().set_visible(False)
     # plt.gca().get_yaxis().set_visible(False)
-    plt.axis('off')
+    # plt.xticks([])
+    # plt.yticks([])
+    # plt.axis('off')
 
     # plt.tight_layout(pad=0.4, w_pad=1, h_pad=1.0)
     fig.tight_layout(pad=1.0, w_pad=10.0, h_pad=10.0)
