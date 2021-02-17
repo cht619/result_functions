@@ -3,6 +3,7 @@
     <words>
       <w>dataloader</w>
       <w>feas</w>
+      <w>kmeans</w>
       <w>tsne</w>
     </words>
   </dictionary>
