@@ -21,6 +21,7 @@ from sklearn import metrics
 
 
 colors_src = ['b', 'r', 'g', 'c', 'y', '#9370DB', '#FFFAFA', '#8B0000', '#90EE90', 'orange', '#FF00FF', '#90EE90']
+colors_tgt = ['o', '#708090', '#FFFAFA', 'c', 'y', '#9370DB', '#FFFAFA', '#8B0000', '#90EE90', 'orange', '#FF00FF', '#90EE90']
 marker_src = ['o', '*', '^', '<', '>']
 marker_tgt = ['x', '+', 'd']
 
@@ -137,7 +138,7 @@ def plot_clusters_distribution(root_path, domain_src, fea_type='Resnet50', nC_Ds
     plt.show()
 
 
-def plot_clusters_pairs_distribution(root_path, domain_src, domain_tgt, fea_type='Resnet50', nC_Ds=3, nC_Dt=3):
+def plot_clusters_pairs_distribution_mode1(root_path, domain_src, domain_tgt, fea_type='Resnet50', nC_Ds=3, nC_Dt=3):
     # 一样的颜色就是属于一个pair，形状不同就是不同domain
     feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
     feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type)
@@ -181,12 +182,53 @@ def plot_clusters_pairs_distribution(root_path, domain_src, domain_tgt, fea_type
     plt.show()
 
 
+def plot_clusters_pairs_distribution_mode2(root_path, domain_src, domain_tgt, fea_type='Resnet50', nC_Ds=3, nC_Dt=3):
+    # 不同颜色不同domain，一样的形状就是一个pair
+    feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
+    feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type)
 
+    data_src_tsne = TSNE(feas_src)
+    data_tgt_tsne = TSNE(feas_tgt)
+
+    feas_src_list, labels_src_list, pred_labels_src = clustering(feas_src, labels_src, nC_Ds)
+    feas_tgt_list, labels_gtg_list, pred_labels_tgt = clustering(feas_tgt, labels_tgt, nC_Dt)
+
+    distance_matrix = distance_functions.get_distance_matrix(feas_src_list, feas_tgt_list, distance_method='MMD')
+    pairs = get_pairs(distance_matrix)
+
+    src_plot_index_list = []
+    legend_src = []
+    legend_tgt = []
+
+    plt.figure(figsize=(12, 12))
+    for i, pair in enumerate(pairs):
+        print(pair)
+        t = plt.scatter(data_tgt_tsne[pred_labels_tgt == pair[1]][:, 0],
+                        data_tgt_tsne[pred_labels_tgt == pair[1]][:, 1],
+                        color='orange', marker=marker_src[pair[0]])
+        # greedy 重复选取数据
+        if pair[0] not in src_plot_index_list:
+            print(pair[0], src_plot_index_list)
+            s = plt.scatter(data_src_tsne[pred_labels_src==pair[0]][:, 0], data_src_tsne[pred_labels_src==pair[0]][:, 1],
+                        color='blue', marker=marker_src[pair[0]])
+            src_plot_index_list.append(pair[0])
+            legend_src.append(s)
+            legend_tgt += ['Ds', 'Dt']
+        else:
+            legend_tgt.append('Dt')
+        legend_src.append(t)
+
+
+    plt.xticks([])
+    plt.yticks([])
+    plt.legend(legend_src, legend_tgt)
+    plt.savefig('./clusters2_1.png')
+    plt.show()
 
 
 if __name__ == '__main__':
     # plot_original_distribution(data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_i, fea_type='Resnet50')
-    plot_clusters_pairs_distribution(
+    plot_clusters_pairs_distribution_mode2(
         data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_i
     )
     # plot_clusters_distribution(
