@@ -16,6 +16,7 @@ import torch
 import torch.utils.data as data
 import data_path
 from sklearn.cluster import KMeans, SpectralClustering
+from Distance import distance_functions
 
 
 colors_src = ['b', 'r', 'g', 'c', 'y', '#9370DB', '#FFFAFA', '#8B0000', '#90EE90', 'orange', '#FF00FF', '#90EE90']
@@ -69,6 +70,13 @@ def clustering(feas, labels, n_clusters):
     return feas_list, labels_list
 
 
+def get_pairs(d_matrix):
+    n_Ds, n_Dt = d_matrix.shape
+    index_pairs_Ds = np.argmin(d_matrix, 0)  # 像下取 0纵1横
+    pairs = [(src, tgt) for tgt, src in enumerate(index_pairs_Ds)]
+
+    return pairs
+
 
 def TSNE(data):
     tsne = manifold.TSNE(n_components=2, init='pca', random_state=501)
@@ -79,7 +87,7 @@ def TSNE(data):
     return X_norm
 
 
-def plot_(root_path, domain_src, domain_tgt, fea_type):
+def plot_original_distribution(root_path, domain_src, domain_tgt, fea_type):
     feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
     feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type)
 
@@ -103,21 +111,24 @@ def plot_(root_path, domain_src, domain_tgt, fea_type):
     plt.show()
 
 
-def analysis():
-    pass
+def plot_clusters_distribution(root_path, domain_src, domain_tgt, fea_type='Resnet50', nC_Ds=3, nC_Dt=3):
+    feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
+    feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type)
+
+    feas_src_list, labels_src_list = clustering(feas_src, labels_src, nC_Ds)
+    feas_tgt_list, labels_gtg_list = clustering(feas_tgt, labels_tgt, nC_Dt)
+
+    distance_matrix = distance_functions.get_distance_matrix(feas_src_list, feas_tgt_list, distance_method='MMD')
+
+    pairs = get_pairs(distance_matrix)
+
+    print(pairs)
+
+
 
 
 if __name__ == '__main__':
-    # image_clef_c_data, image_clef_c_label = get_feas_labels(
-    #     data_path.Image_CLEF_root_path, data_path.domain_c, fea_type='Resnet50')
-    #
-    # tsne_data = TSNE(image_clef_c_data)
-    #
-    # plt.figure(figsize=(8, 8))
-    # for i in range(tsne_data.shape[0]):
-    #     plt.text(tsne_data[i, 0], tsne_data[i, 1], str(int(image_clef_c_label[i])), color=colors_src[int(image_clef_c_label[i])],
-    #              fontdict={'weight': 'bold', 'size': 9})
-    # plt.xticks([])
-    # plt.yticks([])
-    # plt.show()
-    plot_(data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_i, fea_type='Resnet50')
+    # plot_original_distribution(data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_i, fea_type='Resnet50')
+    plot_clusters_distribution(
+        data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_i
+    )
