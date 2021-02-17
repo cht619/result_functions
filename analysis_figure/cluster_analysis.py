@@ -22,7 +22,7 @@ from sklearn import metrics
 
 colors_src = ['b', 'r', 'g', 'c', 'y', '#9370DB', '#FFFAFA', '#8B0000', '#90EE90', 'orange', '#FF00FF', '#90EE90']
 colors_tgt = ['o', '#708090', '#FFFAFA', 'c', 'y', '#9370DB', '#FFFAFA', '#8B0000', '#90EE90', 'orange', '#FF00FF', '#90EE90']
-marker_src = ['o', '*', '^', '<', '>']
+marker_src = ['o', '*', '^', '<', '>', 'x', '+', 'd']
 marker_tgt = ['x', '+', 'd']
 
 
@@ -182,13 +182,14 @@ def plot_clusters_pairs_distribution_mode1(root_path, domain_src, domain_tgt, fe
     plt.show()
 
 
-def plot_clusters_pairs_distribution_mode2(root_path, domain_src, domain_tgt, fea_type='Resnet50', nC_Ds=3, nC_Dt=3):
+def plot_clusters_pairs_distribution_mode2(
+        root_path, domain_src, domain_tgt, domain_name, fea_type='Resnet50', nC_Ds=3, nC_Dt=8):
     # 不同颜色不同domain，一样的形状就是一个pair
     feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
     feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type)
+    all_data = np.concatenate((feas_src, feas_tgt), 0)
 
-    data_src_tsne = TSNE(feas_src)
-    data_tgt_tsne = TSNE(feas_tgt)
+    all_data_tsne = TSNE(all_data)
 
     feas_src_list, labels_src_list, pred_labels_src = clustering(feas_src, labels_src, nC_Ds)
     feas_tgt_list, labels_gtg_list, pred_labels_tgt = clustering(feas_tgt, labels_tgt, nC_Dt)
@@ -203,14 +204,15 @@ def plot_clusters_pairs_distribution_mode2(root_path, domain_src, domain_tgt, fe
     plt.figure(figsize=(12, 12))
     for i, pair in enumerate(pairs):
         print(pair)
-        t = plt.scatter(data_tgt_tsne[pred_labels_tgt == pair[1]][:, 0],
-                        data_tgt_tsne[pred_labels_tgt == pair[1]][:, 1],
-                        color='orange', marker=marker_src[pair[0]])
+        t = plt.scatter(all_data_tsne[feas_src.shape[0]:][pred_labels_tgt == pair[1]][:, 0],
+                        all_data_tsne[feas_src.shape[0]:][pred_labels_tgt == pair[1]][:, 1],
+                        color='brown', marker=marker_src[pair[0]])
         # greedy 重复选取数据
         if pair[0] not in src_plot_index_list:
             print(pair[0], src_plot_index_list)
-            s = plt.scatter(data_src_tsne[pred_labels_src==pair[0]][:, 0], data_src_tsne[pred_labels_src==pair[0]][:, 1],
-                        color='blue', marker=marker_src[pair[0]])
+            s = plt.scatter(all_data_tsne[:feas_src.shape[0]][pred_labels_src==pair[0]][:, 0],
+                            all_data_tsne[:feas_src.shape[0]][pred_labels_src==pair[0]][:, 1],
+                        color='skyblue', marker=marker_src[pair[0]])
             src_plot_index_list.append(pair[0])
             legend_src.append(s)
             legend_tgt += ['Ds', 'Dt']
@@ -222,14 +224,14 @@ def plot_clusters_pairs_distribution_mode2(root_path, domain_src, domain_tgt, fe
     plt.xticks([])
     plt.yticks([])
     plt.legend(legend_src, legend_tgt)
-    plt.savefig('./clusters2_1.png')
+    plt.savefig('./PNG/{}.png'.format(domain_name))
     plt.show()
 
 
 if __name__ == '__main__':
     # plot_original_distribution(data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_i, fea_type='Resnet50')
     plot_clusters_pairs_distribution_mode2(
-        data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_i
+        data_path.Image_CLEF_root_path, data_path.domain_i, data_path.domain_ic, domain_name='C_I', nC_Ds=3, nC_Dt=6,
     )
     # plot_clusters_distribution(
     #     data_path.Image_CLEF_root_path, data_path.domain_c
