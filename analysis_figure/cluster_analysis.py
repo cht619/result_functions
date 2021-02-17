@@ -214,11 +214,11 @@ def plot_clusters_pairs_distribution_mode2(
                             all_data_tsne[:feas_src.shape[0]][pred_labels_src==pair[0]][:, 1],
                         color='skyblue', marker=marker_src[pair[0]])
             src_plot_index_list.append(pair[0])
-            legend_src.append(s)
+            legend_src += [s, t]
             legend_tgt += ['Ds', 'Dt']
-        else:
-            legend_tgt.append('Dt')
-        legend_src.append(t)
+        # else:
+        #     legend_tgt.append('Dt')
+        # legend_src.append(t)
 
 
     plt.xticks([])
@@ -231,7 +231,7 @@ def plot_clusters_pairs_distribution_mode2(
 if __name__ == '__main__':
     # plot_original_distribution(data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_i, fea_type='Resnet50')
     plot_clusters_pairs_distribution_mode2(
-        data_path.Image_CLEF_root_path, data_path.domain_i, data_path.domain_ic, domain_name='C_I', nC_Ds=3, nC_Dt=6,
+        data_path.Image_CLEF_root_path, data_path.domain_i, data_path.domain_ic, domain_name='C_I', nC_Ds=4, nC_Dt=6,
     )
     # plot_clusters_distribution(
     #     data_path.Image_CLEF_root_path, data_path.domain_c
