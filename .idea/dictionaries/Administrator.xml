@@ -4,6 +4,7 @@
       <w>dataloader</w>
       <w>feas</w>
       <w>kmeans</w>
+      <w>resnet</w>
       <w>tsne</w>
     </words>
   </dictionary>

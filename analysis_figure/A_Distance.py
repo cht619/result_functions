@@ -10,6 +10,33 @@
 
 import numpy as np
 from sklearn import svm
+import data_path
+from scipy.io import loadmat
+import os
+
+
+def get_feas_labels(root_path, domain, fea_type='Resnet50'):
+    # 得到原始特征
+    path = os.path.join(root_path, domain)
+    if fea_type == 'Resnet50':
+        with open(path, encoding='utf-8') as f:
+            imgs_data = np.loadtxt(f, delimiter=",")
+            features = imgs_data[:, :-1]
+            labels = imgs_data[:, -1]
+
+    elif fea_type =='MDS':
+        # dict_keys(['__header__', '__version__', '__globals__', 'fts', 'labels'])
+        domain_data = loadmat(path)
+        features = np.asarray(domain_data['fts'])
+        labels = np.asarray(domain_data['labels']).squeeze()
+
+    else: # DeCAF6
+        domain_data = loadmat(path)
+        features = np.asarray(domain_data['feas'])
+        labels = np.asarray(domain_data['labels']).squeeze() - 1  # start from 0
+    return features, labels
+
+
 
 def proxy_a_distance(source_X, target_X, verbose=False):
     """
@@ -21,7 +48,7 @@ def proxy_a_distance(source_X, target_X, verbose=False):
     if verbose:
         print('PAD on', (nb_source, nb_target), 'examples')
 
-    C_list = np.logspace(-5, 4, 10)
+    C_list = np.logspace(-5, 4, 10)  # 对数等比数列
 
     half_source, half_target = int(nb_source/2), int(nb_target/2)
     train_X = np.vstack((source_X[0:half_source, :], target_X[0:half_target, :]))
@@ -48,3 +75,15 @@ def proxy_a_distance(source_X, target_X, verbose=False):
         best_risk = min(best_risk, test_risk)
 
     return 2 * (1. - 2 * best_risk)
+
+
+def get_A_distance(root_path, domain_src, domain_tgt, fea_type='Resnet50'):
+    feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type=fea_type)
+    feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type=fea_type)
+
+    A_distance = proxy_a_distance(feas_src, feas_tgt, verbose=True)
+    print('A_distance:{}'.format(A_distance))
+
+
+if __name__ == '__main__':
+    get_A_distance(data_path.Image_CLEF_root_path, domain_src=data_path.domain_c, domain_tgt=data_path.domain_ci)
