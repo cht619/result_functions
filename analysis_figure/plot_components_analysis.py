@@ -5,7 +5,7 @@
 # @File : plot_components_analysis.py
 # @Software: PyCharm 
 # @Blog: https://www.zhihu.com/people/xia-gan-yi-dan-chen-hao-tian
-# @Function:
+# @Function: 根据不同聚类的影响来画柱状图
 
 
 from mpl_toolkits.mplot3d import Axes3D
@@ -15,7 +15,7 @@ import os
 import re
 import csv
 
-color = ['b', 'r', 'g', 'c', 'y', '#0000CD', '#FFFAFA']
+color = ['dodgerblue', 'turquoise', 'darkcyan', 'chartreuse', 'lightpink', 'mediumslateblue', 'darkred']
 
 
 def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, figure_index, title, fea_type=None):
@@ -49,19 +49,22 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
     # ax.zaix.set_ticks_position('right')
 
     # xticks是坐标的名字
-    ax.set_xlim(0, 10)  # 同样设置刻度值
-    ax.set_ylim(0, 10)  # 同样设置刻度值
+    # ax.set_xlim(0, 10)  # 同样设置刻度值
+    # ax.set_ylim(0, 10)  # 同样设置刻度值
     if fea_type == 'DeCAF6':
+        print(accuracy_list)  # 883 884
         min_accuracy = np.min(accuracy_list)
-        low = min_accuracy // 0.1 / 10
+        low = min_accuracy // 0.01 / 101
         # ax.set_zlim(low, 1.0)
         dz = [data - low for data in dz]
         print(low, dz)
         # ax.set_zticks()  # 这个是刻度范围
         ax.set_zticklabels(['{:.2f}'.format(low + step) for step in np.arange(0.01, 0.1, 0.01)])
 
-    elif fea_type == 'C_I':
-        ax.set_zlim(0.7, 1.0)
+    elif fea_type == 'Resnet50':
+        print(accuracy_list)
+        min_accuracy = np.min(accuracy_list)
+        # ax.set_zlim(0.7, 1.0)
     ax.view_init(elev=45., azim=45)
 
     # x, y, z: array - like
@@ -85,45 +88,46 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
 
 
 def Figure():
-    fig = plt.figure(figsize=(16, 12))
+    fig = plt.figure(figsize=(16, 16))
     plt.title('Analysis')
-    plt.axis('off')
+    plt.axis('off')  # 在一开始进行不显示
 
-    accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path = r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='A_C',
-    )
-    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 231, '(a)A-C', fea_type='DeCAF6')
+    if True:
+        accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
+            root_path = r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+            domain_name='A_C',
+        )
+        get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 231, '(a)A-C', fea_type='DeCAF6')
 
-    accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='C_A'
-    )
-    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 232, '(b)D-A', fea_type='DeCAF6')
+        accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
+            root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+            domain_name='C_A'
+        )
+        get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 232, '(b)D-A', fea_type='DeCAF6')
 
-    accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='C_I'
-    )
-    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 233, '(c)C-I')
+        accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
+            root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+            domain_name='C_I'
+        )
+        get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 233, '(c)C-I')
 
-    accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\1.28',
-        domain_name='Ar_Cl'
-    )
-    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 234, '(d)Ar_Cl')
+        accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
+            root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+            domain_name='Ar_Cl'
+        )
+        get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 234, '(d)Ar_Cl', fea_type='Resnet50')
 
-    accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\Clustering_Train\greedy\0.03\Greedy_normalization_max',
-        domain_name='B_K'
-    )
-    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 235, '(e)B-K')
+        accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
+            root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+            domain_name='B_K'
+        )
+        get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 235, '(e)B-K')
 
-    accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50',
-        domain_name='train_vali'
-    )
-    get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 236, '(f)train_vali')
+        accuracy_list, components_of_Ds_list, components_of_Dt_list = get_mean_clustering_train_plot(
+            root_path=r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50',
+            domain_name='train_vali'
+        )
+        get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 236, '(f)train_vali')
 
     # plt.gca().get_xaxis().set_visible(False)
     # plt.gca().get_yaxis().set_visible(False)
@@ -132,8 +136,8 @@ def Figure():
     # plt.axis('off')
 
     # plt.tight_layout(pad=0.4, w_pad=1, h_pad=1.0)
-    fig.tight_layout(pad=1.0, w_pad=10.0, h_pad=10.0)
-    plt.savefig('./analysis.jpg')
+    # fig.tight_layout(pad=1.0, w_pad=10.0, h_pad=10.0)
+    plt.savefig('./PNG/analysis_components.jpg')
     plt.show()
 
 
@@ -174,4 +178,10 @@ if __name__ == '__main__':
     Figure()
     # s = np.min(accuracy_list)
     # print(s, s//0.1 / 10)
-    print(np.arange(0.01, 0.1, 0.01))
+    # print(np.arange(0.01, 0.1, 0.01))
+
+    accuracy_list = [0.8837763511606083, 0.8809349212823694, 0.8847846004722413, 0.8841429872739294, 0.8845096233872504, 0.8837763511606083, 0.8834097150472869, 0.8848762595005715, 0.8839596692172688, 0.8856095317272139, 0.8841429872739294, 0.8853345546422231, 0.8852428956138928, 0.8861594858971955, 0.8846012824155809, 0.883684692132278, 0.8856095317272139, 0.8868927581238379, 0.8863428039538561, 0.8835013740756175, 0.8852428956138928, 0.8853345546422231, 0.8826764428206448, 0.8855178726988836, 0.8844179643589202, 0.883684692132278, 0.8873510532654892, 0.884692941443911, 0.883684692132278, 0.8825847837923145, 0.8857011907555441, 0.884967918528902, 0.8821264886506631, 0.8867094400671773, 0.8846012824155807, 0.8844179643589202, 0.8820348296223328, 0.8829514199056356, 0.8847846004722413, 0.8856095317272139, 0.8823098067073236, 0.8803849671123876, 0.8816681935090116, 0.882768101848975, 0.8862511449255258, 0.8840513282455991, 0.8833180560189569, 0.8848762595005717, 0.8794683768290849]
+    low = np.min(accuracy_list)
+    accuracy_list_1 = [(data  - low // 0.01 / 100) * 100 for data in accuracy_list]
+    print(accuracy_list_1)
+    print(low, low / 0.01, low // 0.1, low // 0.01 / 100)
