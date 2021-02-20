@@ -24,7 +24,7 @@ alpha = np.linspace(0.2, 0.95, 49, endpoint=True)
 
 cmap_names = ["viridis", "RdBu", "Set1", "jet"]  # 定义色板，方便使用！这里一共是4种风格
 cmap = mpl.cm.get_cmap('RdBu', 7)
-colors = cmap(np.linspace(0, 1, 7))
+colors = cmap(np.linspace(0, 1, 7))  # 获取7种颜色
 
 
 def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, figure_index, title, fea_type=None):

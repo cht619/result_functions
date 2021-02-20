@@ -17,5 +17,7 @@ x1 = [2, 4, 6, 8]
 y= [6,7,8,9]
 z = 5
 ax.bar(x, y, zs=1, zdir='y', color='rgb', alpha=0.5)
-ax.bar(x1, x, zs=3, zdir='y', color='orange', alpha=0.5)
+ax.bar(x1, x, 4, zdir='y', color='orange', alpha=0.5)
 plt.show()
+
+print(help(plt.bar))
