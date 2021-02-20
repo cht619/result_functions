@@ -121,10 +121,10 @@ def plot_original_distribution(root_path, domain_src, domain_tgt, fig, figure_in
     ax.set_title('None-dapted')
 
     # Ds
-    ax.scatter(data_tsne[:feas_src.shape[0]][:, 0], data_tsne[:feas_src.shape[0]][:, 1], s=10, alpha=0.5,
-                color='green', marker='x', )  # s是大小size
+    ax.scatter(data_tsne[:feas_src.shape[0]][:, 0], data_tsne[:feas_src.shape[0]][:, 1], s=10, alpha=0.4,
+                color='red', marker='x', )  # s是大小size
     # Dt
-    ax.scatter(data_tsne[feas_src.shape[0]:][:, 0], data_tsne[feas_src.shape[0]:][:, 1], s=10, alpha=0.5,
+    ax.scatter(data_tsne[feas_src.shape[0]:][:, 0], data_tsne[feas_src.shape[0]:][:, 1], s=10, alpha=0.4,
                 color='blue', marker='x', )
 
     ax.set_xticks([])
@@ -142,15 +142,28 @@ def plot_transfer_distribution(pth_path, fig, figure_index):
     ax.set_title('Adapted')
 
     # Ds
-    ax.scatter(data_tsne[:feas_src_f.shape[0]][:, 0], data_tsne[:feas_src_f.shape[0]][:, 1], s=10, alpha=0.5,
-               color='green', marker='x', )  # s是大小size
+    ax.scatter(data_tsne[:feas_src_f.shape[0]][:, 0], data_tsne[:feas_src_f.shape[0]][:, 1], s=10, alpha=0.4,
+               color='red', marker='x', )  # s是大小size
     # Dt
-    ax.scatter(data_tsne[feas_tgt_f.shape[0]:][:, 0], data_tsne[feas_tgt_f.shape[0]:][:, 1], s=10, alpha=0.5,
+    ax.scatter(data_tsne[feas_tgt_f.shape[0]:][:, 0], data_tsne[feas_tgt_f.shape[0]:][:, 1], s=10, alpha=0.4,
                color='blue', marker='x', )
 
     ax.set_xticks([])
     ax.set_yticks([])
     ax.legend(['Ds', 'Dt'])
+
+
+def plot_feas_distribution_pre_train(root_path, domain_src, domain_tgt, feas_f_pth_path, fea_type='Resnet50'):
+    fig = plt.figure(figsize=(12, 6))
+    # 原始分布
+    plot_original_distribution(
+        root_path, domain_src, domain_tgt, fig, figure_index=121, fea_type=fea_type,
+    )
+    # 对抗迁移后的分布
+    plot_transfer_distribution(feas_f_pth_path, fig, figure_index=122)
+
+    plt.savefig('./PNG/Adapted_Ar_Cl.png', dpi=400)
+    plt.show()
 
 
 def plot_clusters_distribution(root_path, domain_src, fea_type='Resnet50', nC_Ds=5):
@@ -169,19 +182,6 @@ def plot_clusters_distribution(root_path, domain_src, fea_type='Resnet50', nC_Ds
     plt.yticks([])
     plt.legend(['Ds', 'Dt'])
     plt.savefig('./clusters_kmeans.png')
-    plt.show()
-
-
-def plot_feas_distribution_pre_train(root_path, domain_src, domain_tgt, feas_f_pth_path, fea_type='Resnet50'):
-    fig = plt.figure(figsize=(12, 6))
-    # 原始分布
-    plot_original_distribution(
-        root_path, domain_src, domain_tgt, fig, figure_index=121, fea_type=fea_type,
-    )
-    # 对抗迁移后的分布
-    plot_transfer_distribution(feas_f_pth_path, fig, figure_index=122)
-
-    plt.savefig('./PNG/Adapted.png', dpi=400)
     plt.show()
 
 
@@ -284,7 +284,7 @@ if __name__ == '__main__':
     # plot_transfer_distribution(
     #     r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\Image_CLEF_Resnet50\adversarial_feas\C_I\0.03\C_I_0.815.pth')
 
-    pth_path = r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\Image_CLEF_Resnet50\adversarial_feas\C_I\0.03\C_I_0.815.pth'
+    pth_path = r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\adversarial_feas\Ar_Cl_0.513.pth'
     plot_feas_distribution_pre_train(
-        data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_ci, pth_path
+        data_path.Office_Home_root_path, data_path.domain_ar, data_path.domain_ar_cl, pth_path
     )
