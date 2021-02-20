@@ -7,6 +7,7 @@
 # @Blog: https://www.zhihu.com/people/xia-gan-yi-dan-chen-hao-tian
 # @Function:
 
+import torch
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -50,6 +51,16 @@ def get_feas_labels(root_path, domain, fea_type='Resnet50'):
         features = np.asarray(domain_data['feas'])
         labels = np.asarray(domain_data['labels']).squeeze() - 1  # start from 0
     return features, labels
+
+
+def list_to_numpy(data_list):
+    data_numpy = 0
+    for i in range(len(data_list)):
+        if i == 0:
+            data_numpy = data_list[0]
+        else:
+            data_numpy = np.concatenate((data_numpy, data_list[i]), 0)
+    return data_numpy
 
 
 def get_src_dataloader_by_domain_path(root_path, domain, batch_size, drop_last=False, fea_type='Resnet50'):
@@ -99,28 +110,47 @@ def TSNE(data):
     return X_norm
 
 
-def plot_original_distribution(root_path, domain_src, domain_tgt, fea_type):
+def plot_original_distribution(root_path, domain_src, domain_tgt, fig, figure_index, fea_type):
     # 利用不同颜色进行区分
     feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
     feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type)
 
     data_tsne = TSNE(np.concatenate((feas_src, feas_tgt), 0))
 
-    plt.figure(figsize=(6, 6))
-    plt.title('Non-adapted')
+    ax = fig.add_subplot(figure_index)
+    ax.set_title('None-dapted')
 
     # Ds
-    plt.scatter(data_tsne[:feas_src.shape[0]][:, 0], data_tsne[:feas_src.shape[0]][:, 1], s=10, alpha=0.5,
-                color='red', marker='x', )  # s是大小，
+    ax.scatter(data_tsne[:feas_src.shape[0]][:, 0], data_tsne[:feas_src.shape[0]][:, 1], s=10, alpha=0.5,
+                color='green', marker='x', )  # s是大小size
     # Dt
-    plt.scatter(data_tsne[feas_src.shape[0]:][:, 0], data_tsne[feas_src.shape[0]:][:, 1], s=10, alpha=0.5,
+    ax.scatter(data_tsne[feas_src.shape[0]:][:, 0], data_tsne[feas_src.shape[0]:][:, 1], s=10, alpha=0.5,
                 color='blue', marker='x', )
 
-    plt.xticks([])
-    plt.yticks([])
-    plt.legend(['Ds', 'Dt'])
-    plt.savefig('./PNG/Non-adapted.png', dpi=400)
-    plt.show()
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.legend(['Ds', 'Dt'])
+
+
+def plot_transfer_distribution(pth_path, fig, figure_index):
+    state = torch.load(pth_path)
+    feas_src_f = list_to_numpy(state['feas_src_f'])
+    feas_tgt_f = list_to_numpy(state['feas_src_f'])
+
+    data_tsne = TSNE(np.concatenate((feas_src_f, feas_tgt_f), 0))
+    ax = fig.add_subplot(figure_index)
+    ax.set_title('Adapted')
+
+    # Ds
+    ax.scatter(data_tsne[:feas_src_f.shape[0]][:, 0], data_tsne[:feas_src_f.shape[0]][:, 1], s=10, alpha=0.5,
+               color='green', marker='x', )  # s是大小size
+    # Dt
+    ax.scatter(data_tsne[feas_tgt_f.shape[0]:][:, 0], data_tsne[feas_tgt_f.shape[0]:][:, 1], s=10, alpha=0.5,
+               color='blue', marker='x', )
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.legend(['Ds', 'Dt'])
 
 
 def plot_clusters_distribution(root_path, domain_src, fea_type='Resnet50', nC_Ds=5):
@@ -140,6 +170,20 @@ def plot_clusters_distribution(root_path, domain_src, fea_type='Resnet50', nC_Ds
     plt.legend(['Ds', 'Dt'])
     plt.savefig('./clusters_kmeans.png')
     plt.show()
+
+
+def plot_feas_distribution_pre_train(root_path, domain_src, domain_tgt, feas_f_pth_path, fea_type='Resnet50'):
+    fig = plt.figure(figsize=(12, 6))
+    # 原始分布
+    plot_original_distribution(
+        root_path, domain_src, domain_tgt, fig, figure_index=121, fea_type=fea_type,
+    )
+    # 对抗迁移后的分布
+    plot_transfer_distribution(feas_f_pth_path, fig, figure_index=122)
+
+    plt.savefig('./PNG/Adapted.png', dpi=400)
+    plt.show()
+
 
 
 def plot_clusters_pairs_distribution_mode1(
@@ -234,6 +278,13 @@ def plot_clusters_pairs_distribution_mode2(
 
 
 if __name__ == '__main__':
-    plot_original_distribution(
-        data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_ci, fea_type='Resnet50'
+    # plot_original_distribution(
+    #     data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_ci, fea_type='Resnet50'
+    # )
+    # plot_transfer_distribution(
+    #     r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\Image_CLEF_Resnet50\adversarial_feas\C_I\0.03\C_I_0.815.pth')
+
+    pth_path = r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\Image_CLEF_Resnet50\adversarial_feas\C_I\0.03\C_I_0.815.pth'
+    plot_feas_distribution_pre_train(
+        data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_ci, pth_path
     )
