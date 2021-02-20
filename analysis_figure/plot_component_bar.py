@@ -12,7 +12,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-import re
+import math
 from analysis_figure import plot_components_analysis
 
 # plt.style.use("ggplot")  # 改变风格，可以尝试一下
@@ -29,13 +29,21 @@ colors = cmap(np.linspace(0, 1, 7))
 
 
 def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, figure_index, title, fea_type=None,
-            enlarge=3):
+            enlarge=4):
     # 设置x轴取值
     xedges = np.array(components_of_Ds_list) * enlarge
     # 设置y轴取值
     yedges = np.array(components_of_Dt_list) * enlarge
     # 设置X,Y对应点的值。即原始数据。
-    accuracy = np.array(accuracy_list)
+    accuracy = np.array([np.around(data * 100, 2) for data in accuracy_list])
+
+    max_accuracy_list = np.asarray(accuracy).reshape(7, 7)
+    max_accuracy_index = np.argmax(max_accuracy_list, 1)
+    # for i in range(len(max_accuracy_index)):
+    #     if i > 0:
+    #         max_accuracy_index[i] += 7 * i
+    print(max_accuracy_index)
+    max_accuracy_index = [max_accuracy_index[i] + i*7 for i in range(len(max_accuracy_index))]
 
     # 生成图表对象。
     ax = fig.add_subplot(figure_index, projection='3d')
@@ -50,16 +58,17 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
     ax.set_ylabel('Components of Dt')
     ax.set_zlabel('Accuracy')
     # 设置刻度值
+    ax.set_xticklabels(set(components_of_Ds_list))
+    ax.set_yticklabels(set(components_of_Dt_list))
 
     if fea_type == 'DeCAF6':
-        print(accuracy_list)  # 883 884
-        min_accuracy = np.min(accuracy_list)
-        low = min_accuracy // 0.01 / 101
-        # ax.set_zlim(low, 1.0)
-        dz = [data - low for data in dz]
-        print(low, dz)
+        min_accuracy = np.min(accuracy)
+        start = math.modf(min_accuracy)[1]  # 相当于np.floor
+        # start = min_accuracy // 0.01 / 100
+        dz = [data - start for data in dz]
+        print(start, dz)
         # ax.set_zticks()  # 这个是刻度范围
-        ax.set_zticklabels(['{:.2f}'.format(low + step) for step in np.arange(0.01, 0.1, 0.01)])
+        # ax.set_zticklabels(['{:.2f}'.format(start + step) for step in np.arange(0.01, 0.1, 0.01)])
 
     elif fea_type == 'Resnet50':
         print(accuracy_list)
@@ -69,9 +78,12 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
 
     for i in range(accuracy.shape[0]):
 
-        ax.bar3d(xedges[i], yedges[i], zpos, dx=1, dy=1, dz=dz[i], color=colors[xedges[i] // enlarge - 2],
+        bar = ax.bar3d(xedges[i], yedges[i], zpos, dx=1, dy=1, dz=dz[i], color=colors[xedges[i] // enlarge - 2],
                  alpha=0.5, linewidth=2)
-
+        if i in max_accuracy_index :
+            print(accuracy[i])
+            ax.text(xedges[i], yedges[i], dz[i] + 0.2, '{:.2f}'.format(accuracy[i]), ha='center',va='bottom',
+                    fontsize=5)
     # plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
     # plt.show()
 
@@ -95,6 +107,7 @@ def Figure():
         )
         get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 232, '(b)D-A', fea_type='DeCAF6')
     plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
+    # 保存时候的dpi影响最后的效果
     plt.savefig('./PNG/analysis_components_1.jpg', dpi=500)
     plt.show()
 
