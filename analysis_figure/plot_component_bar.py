@@ -2,7 +2,7 @@
 # @Time : 2021/2/19 20:56
 # @Author : CHT
 # @Site : 
-# @File : plot2.py
+# @File : plot_component_bar.py
 # @Software: PyCharm 
 # @Blog: https://www.zhihu.com/people/xia-gan-yi-dan-chen-hao-tian
 # @Function:
@@ -28,11 +28,12 @@ colors = cmap(np.linspace(0, 1, 7))
 
 
 
-def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, figure_index, title, fea_type=None):
+def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, figure_index, title, fea_type=None,
+            enlarge=3):
     # 设置x轴取值
-    xedges = np.array(components_of_Ds_list) * 4
+    xedges = np.array(components_of_Ds_list) * enlarge
     # 设置y轴取值
-    yedges = np.array(components_of_Dt_list) * 4
+    yedges = np.array(components_of_Dt_list) * enlarge
     # 设置X,Y对应点的值。即原始数据。
     accuracy = np.array(accuracy_list)
 
@@ -48,6 +49,7 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
     ax.set_xlabel('Components of Ds')
     ax.set_ylabel('Components of Dt')
     ax.set_zlabel('Accuracy')
+    # 设置刻度值
 
     if fea_type == 'DeCAF6':
         print(accuracy_list)  # 883 884
@@ -66,11 +68,8 @@ def get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, fi
     ax.view_init(elev=45., azim=45)
 
     for i in range(accuracy.shape[0]):
-        # print(xedges[i], yedges[i], dz[i], color[xedges[i]-2])
-        # cmap=plt.cm.gist_rainbow
-        # ax.bar3d(xedges[i], yedges[i], zpos, 1, 1, dz[i], color=color[xedges[i]-2], zsort='average',
-        #          alpha=0.0, linewidth=1)
-        ax.bar3d(xedges[i], yedges[i], zpos, dx=1, dy=1, dz=dz[i], color=colors[xedges[i] // 4 - 2],
+
+        ax.bar3d(xedges[i], yedges[i], zpos, dx=1, dy=1, dz=dz[i], color=colors[xedges[i] // enlarge - 2],
                  alpha=0.5, linewidth=2)
 
     # plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
@@ -95,8 +94,8 @@ def Figure():
             domain_name='C_A'
         )
         get_bar(accuracy_list, components_of_Ds_list, components_of_Dt_list, fig, 232, '(b)D-A', fea_type='DeCAF6')
-
-    plt.savefig('./PNG/analysis_components_1.jpg')
+    plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
+    plt.savefig('./PNG/analysis_components_1.jpg', dpi=500)
     plt.show()
 
 
