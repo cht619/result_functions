@@ -160,6 +160,8 @@ def plot_transfer_distribution_pre_train(pth_path, fig, figure_index):
 def plot_feas_distribution_pre_train(root_path, domain_src, domain_tgt, feas_f_pth_path, fea_type='Resnet50'):
     fig = plt.figure(figsize=(12, 6))
     plt.title('Pre-train', fontdict={'weight':'normal','size': 50})
+    plt.xticks([])
+    plt.yticks([])
     # 原始分布
     plot_original_distribution_pre_train(
         root_path, domain_src, domain_tgt, fig, figure_index=121, fea_type=fea_type,
