@@ -27,8 +27,7 @@ colors = cmap(np.linspace(0, 1, 2))
 
 colors_src = ['b', 'r', 'g', 'c', 'y', '#9370DB', '#FFFAFA', '#8B0000', '#90EE90', 'orange', '#FF00FF', '#90EE90']
 colors_tgt = ['o', '#708090', '#FFFAFA', 'c', 'y', '#9370DB', '#FFFAFA', '#8B0000', '#90EE90', 'orange', '#FF00FF', '#90EE90']
-marker_src = ['o', '*', '^', '<', '>', 'x', '+', 'd']
-marker_tgt = ['x', '+', 'd']
+markers = ['o', '*', '^', '<', '>', 'x', '+', 'd']
 
 
 def get_feas_labels(root_path, domain, fea_type='Resnet50'):
@@ -53,13 +52,18 @@ def get_feas_labels(root_path, domain, fea_type='Resnet50'):
     return features, labels
 
 
-def list_to_numpy(data_list):
+def list_to_numpy(data_list, list_mode=1):
     data_numpy = 0
-    for i in range(len(data_list)):
-        if i == 0:
-            data_numpy = data_list[0]
-        else:
-            data_numpy = np.concatenate((data_numpy, data_list[i]), 0)
+    if list_mode == 1:
+        for i in range(len(data_list)):
+            if i == 0:
+                data_numpy = data_list[0]
+            else:
+                data_numpy = np.concatenate((data_numpy, data_list[i]), 0)
+    elif list_mode == 2:
+        # list中间还是list，所以取第一个元素进行处理
+        data_numpy = np.asarray([data[0] for data in data_list])
+        data_numpy = data_numpy.reshape([-1, 2048])
     return data_numpy
 
 
@@ -110,7 +114,7 @@ def TSNE(data):
     return X_norm
 
 
-def plot_original_distribution(root_path, domain_src, domain_tgt, fig, figure_index, fea_type):
+def plot_original_distribution_pre_train(root_path, domain_src, domain_tgt, fig, figure_index, fea_type):
     # 利用不同颜色进行区分
     feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
     feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type)
@@ -118,7 +122,7 @@ def plot_original_distribution(root_path, domain_src, domain_tgt, fig, figure_in
     data_tsne = TSNE(np.concatenate((feas_src, feas_tgt), 0))
 
     ax = fig.add_subplot(figure_index)
-    ax.set_title('None-dapted')
+    ax.set_title('None-adapted')
 
     # Ds
     ax.scatter(data_tsne[:feas_src.shape[0]][:, 0], data_tsne[:feas_src.shape[0]][:, 1], s=10, alpha=0.4,
@@ -132,7 +136,7 @@ def plot_original_distribution(root_path, domain_src, domain_tgt, fig, figure_in
     ax.legend(['Ds', 'Dt'])
 
 
-def plot_transfer_distribution(pth_path, fig, figure_index):
+def plot_transfer_distribution_pre_train(pth_path, fig, figure_index):
     state = torch.load(pth_path)
     feas_src_f = list_to_numpy(state['feas_src_f'])
     feas_tgt_f = list_to_numpy(state['feas_src_f'])
@@ -155,14 +159,114 @@ def plot_transfer_distribution(pth_path, fig, figure_index):
 
 def plot_feas_distribution_pre_train(root_path, domain_src, domain_tgt, feas_f_pth_path, fea_type='Resnet50'):
     fig = plt.figure(figsize=(12, 6))
+    plt.title('Pre-train', fontdict={'weight':'normal','size': 50})
     # 原始分布
-    plot_original_distribution(
+    plot_original_distribution_pre_train(
         root_path, domain_src, domain_tgt, fig, figure_index=121, fea_type=fea_type,
     )
     # 对抗迁移后的分布
-    plot_transfer_distribution(feas_f_pth_path, fig, figure_index=122)
+    plot_transfer_distribution_pre_train(feas_f_pth_path, fig, figure_index=122)
 
-    plt.savefig('./PNG/Adapted_Ar_Cl.png', dpi=400)
+    plt.savefig('./PNG/Pre_train_C_I.jpg', dpi=400)
+    plt.show()
+
+
+def plot_original_distribution_fine_tune(feas_src_list, feas_tgt_list, clusters_pairs, clustering_labels_src,
+                                         clustering_labels_tgt, fig, figure_index):
+
+    feas_src = list_to_numpy(feas_src_list)
+    feas_tgt = list_to_numpy(feas_tgt_list)
+
+    data_tsne = TSNE(np.concatenate((feas_src, feas_tgt), 0))
+    ax = fig.add_subplot(figure_index)
+    ax.set_title('Adapted')
+
+    # 因为使用greedy，所以Ds可能会重复，需要处理。
+    ds_index = []
+    legend_markers = []
+    legend_labels = []
+    for pair in clusters_pairs:
+        dt = ax.scatter(data_tsne[feas_src.shape[0]:][clustering_labels_tgt == pair[1]][:, 0],
+                   data_tsne[feas_src.shape[0]:][clustering_labels_tgt == pair[1]][:, 1],
+                   s=10, alpha=0.4, color='blue', marker=markers[pair[0]], )  # s是大小size
+        if pair[0] not in ds_index:
+            ds = ax.scatter(data_tsne[:feas_src.shape[0]][clustering_labels_src == pair[0]][:, 0],
+                       data_tsne[:feas_src.shape[0]][clustering_labels_src == pair[0]][:, 1],
+                       s=10, alpha=0.4, color='red', marker=markers[pair[0]], )  # s是大小size
+            ds_index.append(pair[0])
+
+            legend_markers += [ds, dt]
+            legend_labels += ['Ds', 'Dt']
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.legend(legend_markers, legend_labels)
+
+
+def plot_transfer_distribution_fine_tune(
+        feas_src_f_list, feas_tgt_f_list, feas_src_list, feas_tgt_list, clusters_pairs, fig, figure_index=None):
+
+    print(np.asarray(feas_src_list[1]).shape, feas_src_f_list[1].shape)
+    # 选2堆出来展示
+    current_i = [clusters_pairs[1][0], clusters_pairs[1][1]]
+    data_tsne = TSNE(
+        np.concatenate((feas_src_list[current_i[0]], feas_tgt_list[current_i[1]]), 0))
+    ax = fig.add_subplot(121)
+    ax.set_title('None-adapted')
+    ds = ax.scatter(data_tsne[:np.asarray(feas_src_list[current_i[0]]).shape[0]][:, 0],
+                    data_tsne[:np.asarray(feas_src_list[current_i[0]]).shape[0]][:, 1],
+                    s=10, alpha=0.4, color='red', marker='o', )  # s是大小size
+    dt = ax.scatter(data_tsne[np.asarray(feas_src_list[current_i[1]]).shape[0]:][:, 0],
+                    data_tsne[np.asarray(feas_src_list[current_i[1]]).shape[0]:][:, 1],
+                    s=10, alpha=0.4, color='blue', marker='o', )  # s是大小size
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.legend(['Ds', 'Dt'])
+
+
+    data_tsne = TSNE(
+        np.concatenate((feas_src_f_list[current_i[0]], feas_tgt_f_list[current_i[1]]), 0))
+    ax = fig.add_subplot(122)
+    ax.set_title('Aadapted')
+
+    ds = ax.scatter(data_tsne[:feas_src_f_list[current_i[0]].shape[0]][:, 0],
+                    data_tsne[:feas_src_f_list[current_i[0]].shape[0]][:, 1],
+                    s=10, alpha=0.4, color='red', marker='o', )  # s是大小size
+    dt = ax.scatter(data_tsne[feas_src_f_list[current_i[1]].shape[0]:][:, 0],
+                    data_tsne[feas_src_f_list[current_i[1]].shape[0]:][:, 1],
+                    s=10, alpha=0.4, color='blue', marker='o', )  # s是大小size
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.legend(['Ds', 'Dt'])
+
+
+
+def plot_feas_distribution_fine_tune(feas_f_pth_path, ):
+    # state = {'feas_src_list': feas_src_list, 'feas_tgt_list': feas_tgt_list,
+    #          'clusters_pairs': clusters_pairs, 'feas_src_f_all': feas_src_f_all,
+    #          'feas_tgt_f_all': feas_tgt_f_all, 'clustering_labels_src': clustering_labels_src,
+    #          'clustering_labels_tgt': clustering_labels_tgt}
+    state = torch.load(feas_f_pth_path)
+    feas_src_list = state['feas_src_list']
+    feas_tgt_list = state['feas_tgt_list']
+    feas_src_f_list = state['feas_src_f_all']
+    feas_tgt_f_list = state['feas_tgt_f_all']
+    clusters_pairs = state['clusters_pairs']
+    clustering_labels_src = state['clustering_labels_src']
+    clustering_labels_tgt = state['clustering_labels_tgt']
+
+    fig = plt.figure(figsize=(12, 6))
+    plt.title('Fine-tune', fontdict={'weight':'normal','size': 50})
+    plt.xticks([])
+    plt.yticks([])
+    # plot_original_distribution_fine_tune(
+    #     feas_src_list, feas_tgt_list, clusters_pairs, clustering_labels_src, clustering_labels_tgt, fig, 111)
+    plot_transfer_distribution_fine_tune(
+        feas_src_f_list, feas_tgt_f_list, feas_src_list, feas_tgt_list, clusters_pairs, fig)
+
+    plt.savefig('./PNG/fine_tune.jpg', dpi=500)
     plt.show()
 
 
@@ -176,7 +280,7 @@ def plot_clusters_distribution(root_path, domain_src, fea_type='Resnet50', nC_Ds
     plt.figure(figsize=(12, 12))
     for i in range(nC_Ds):
         plt.scatter(data_tsne_src[labels==i][:, 0], data_tsne_src[labels==i][:, 1],
-                    marker=marker_src[i], color=colors_src[i], s=50, alpha=0.5,)
+                    marker=markers[i], color=colors_src[i], s=50, alpha=0.5,)
 
     plt.xticks([])
     plt.yticks([])
@@ -284,7 +388,11 @@ if __name__ == '__main__':
     # plot_transfer_distribution(
     #     r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\Image_CLEF_Resnet50\adversarial_feas\C_I\0.03\C_I_0.815.pth')
 
-    pth_path = r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\adversarial_feas\Ar_Cl_0.513.pth'
+    pth_path = r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\adversarial_feas\pre_train\C_I_0.815.pth'
     plot_feas_distribution_pre_train(
-        data_path.Office_Home_root_path, data_path.domain_ar, data_path.domain_ar_cl, pth_path
+        data_path.Image_CLEF_root_path, data_path.domain_c, data_path.domain_ci, pth_path
     )
+    # pth_path = r'E:\cht_project\Kmeans_Transfer_Learning\TAT_Kmeans\pth\adversarial_feas\fine_tune\C_I_2_2.pth'
+    # plot_feas_distribution_fine_tune(
+    #     feas_f_pth_path=pth_path
+    # )
