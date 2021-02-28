@@ -15,7 +15,7 @@ from analysis_figure import plot_components_analysis
 
 font1 = {'family' : 'Times New Roman',
 'weight' : 'normal', 'color':'black',
-'size'  : 23,
+'size'  : 15,
 }
 
 font_text = {'family' : 'Times New Roman',
@@ -88,10 +88,19 @@ if __name__ == '__main__':
         domain_name='A_C',
     )
 
+
+    fig = plt.figure(figsize=(12, 12))
+
     x = np.asarray(accuracy_list).reshape(7, 7)
-    plt.matshow(x, cmap=plt.cm.viridis, vmin=0.8, vmax=0.9)
+    plt.matshow(x, cmap=plt.cm.cool, vmin=0.88, vmax=0.889)
     plt.colorbar()
-    plt.tight_layout()
+    plt.xticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
+    plt.yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
+    # plt.tight_layout()
+
+    plt.title('Multi Component Analysis', pad=20, fontdict=font1)
+    plt.xlabel('Number of components in Ds', fontdict=font1)
+    plt.ylabel('Number of components in Dt', fontdict=font1)
     plt.savefig('./PNG/colorbar.png', bbox_inches='tight')
     plt.show()
 

@@ -45,7 +45,7 @@ def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label)
         plt.text(x, y, '{}:{:.4}'.format(max_acc_in_Dt_index[i], y), fontdict=font_text)
 
 def Figure():
-    fig = plt.figure(figsize=(16, 16))
+    fig = plt.figure(figsize=(12, 12))
     # 二维图，把最高Accuracy突出来
     # get data
     accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
