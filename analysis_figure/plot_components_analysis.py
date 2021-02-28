@@ -184,6 +184,17 @@ def get_mean_clustering_train_plot(root_path, domain_name, n_data_mean=10):
     return accuracy_list, components_of_Ds_list, components_of_Dt_list
 
 
+def data_preprocess(accuracy_list):
+    # 取每一个聚类的最大出来显示
+    accuracy_list = np.asarray(accuracy_list).reshape(7, 7)
+    # 0纵1横
+    max_acc_in_Dt_index = np.argmax(accuracy_list, 1)  # index就是Dt的堆数
+    max_acc = np.max(accuracy_list, 1)
+
+    return max_acc_in_Dt_index, max_acc
+
+
+
 if __name__ == '__main__':
     # accuracy_list, components_of_Ds_list, components_of_Dt_list =   get_mean_clustering_train_plot(
     #     r'E:\cht_project\Experimental_Result\ER\Office_Caltech_DeCAF6\Clustering_Train',
