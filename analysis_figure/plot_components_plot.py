@@ -25,11 +25,13 @@ font_text = {'family' : 'Times New Roman',
 }
 
 cmap_names = ["viridis", "RdBu", "Set1", "jet"]  # 定义色板，方便使用！这里一共是4种风格
-cmap = mpl.cm.get_cmap('jet', 7)
-colors = cmap(np.linspace(0, 1, 7))  # 获取7种颜色
+cmap = mpl.cm.get_cmap('RdBu', 7)
+# colors = cmap(np.linspace(0, 1, 7))  # 获取7种颜色
+colors = ['black', 'orange', 'green', 'blue', 'blueviolet', 'red']
 
 def data_preprocess(accuracy_list):
     # 取每一个聚类的最大出来显示
+    accuracy_list = [data * 100 for data in accuracy_list]
     accuracy_list = np.asarray(accuracy_list).reshape(7, 7)
     # 0纵1横
     max_acc_in_Dt_index = np.argmax(accuracy_list, 1)  # index就是Dt的堆数
@@ -39,11 +41,11 @@ def data_preprocess(accuracy_list):
 
 
 def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label, marker):
-    plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.5, color=color, label=label,
+    plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.6, color=color, label=label,
              marker=marker, markersize=10)
     for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
         # 注意从2开始，所以是加2
-        plt.text(x, y, '{}:{:.4}'.format(max_acc_in_Dt_index[i]+2, y))
+        plt.text(x, y+0.3, '{}:{:.2f}'.format(max_acc_in_Dt_index[i]+2, y))
 
 def Figure():
     fig = plt.figure(figsize=(12, 12))
@@ -82,7 +84,7 @@ def Figure():
         domain_name='B_K'
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[4], label='B-K', marker='+')
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[4], label='B-K', marker='|')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
@@ -93,7 +95,7 @@ def Figure():
 
     # plt.title('Multi Component Analysis', fontdict={'weight':'normal','size': 50})
     plt.xlabel('Number of components in Ds')
-    plt.ylabel('Accuracy')
+    plt.ylabel('Accuracy %')
     plt.legend(loc='upper left')
 
     # Plot
