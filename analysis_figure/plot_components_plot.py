@@ -21,7 +21,7 @@ font1 = {'family' : 'Times New Roman',
 
 font_text = {'family' : 'Times New Roman',
 'weight' : 'normal', 'color':'black',
-'size'  : 10,
+'size'  : 15,
 }
 
 cmap_names = ["viridis", "RdBu", "Set1", "jet"]  # 定义色板，方便使用！这里一共是4种风格
@@ -41,14 +41,15 @@ def data_preprocess(accuracy_list):
 
 
 def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label, marker):
-    plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.6, color=color, label=label,
+    plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.8, color=color, label=label,
              marker=marker, markersize=10)
     for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
         # 注意从2开始，所以是加2
         plt.text(x, y+0.3, '{}:{:.2f}'.format(max_acc_in_Dt_index[i]+2, y))
+    plt.tick_params(labelsize=15)
 
 def Figure():
-    fig = plt.figure(figsize=(12, 12))
+    fig = plt.figure(figsize=(12, 8))
     # 二维图，把最高Accuracy突出来
     # get data
     accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
@@ -84,7 +85,7 @@ def Figure():
         domain_name='B_K'
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[4], label='B-K', marker='|')
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[4], label='B-K', marker='^')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
@@ -94,9 +95,13 @@ def Figure():
     plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[5], label='train-vali', marker='D')
 
     # plt.title('Multi Component Analysis', fontdict={'weight':'normal','size': 50})
-    plt.xlabel('Number of components in Ds')
-    plt.ylabel('Accuracy %')
-    plt.legend(loc='upper left')
+    plt.xlabel('Number of components in Ds', font_text)
+    plt.ylabel('Accuracy (%)', font_text)
+    plt.grid(linestyle='--', linewidth=2)
+    # bbox_to_anchor=[x轴位置， y轴位置]， 大于1就是突出去
+    plt.legend(bbox_to_anchor=(0.5,1.04), loc="center", ncol=5)  # 多少个legend就有多个
+    # 设置x轴的范围为[a, b]，y轴的范围为[c, d]
+    plt.axis([2, 8, 75.0, 95])
 
     # Plot
     # plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.5,
