@@ -42,7 +42,7 @@ def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label)
     plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.5, color=color, label=label,
              marker='x', markersize=10)
     for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
-        plt.text(x, y, '{}:{:.4}'.format(max_acc_in_Dt_index[i], y), fontdict=font_text)
+        plt.text(x, y, '{}:{:.4}'.format(max_acc_in_Dt_index[i]+1, y), fontdict=font_text)
 
 def Figure():
     fig = plt.figure(figsize=(12, 12))
