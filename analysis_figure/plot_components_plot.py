@@ -21,7 +21,7 @@ font1 = {'family' : 'Times New Roman',
 
 font_text = {'family' : 'Times New Roman',
 'weight' : 'normal', 'color':'black',
-'size'  : 15,
+'size'  : 20,
 }
 
 cmap_names = ["viridis", "RdBu", "Set1", "jet"]  # 定义色板，方便使用！这里一共是4种风格
@@ -45,8 +45,11 @@ def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label,
              marker=marker, markersize=10)
     for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
         # 注意从2开始，所以是加2
-        plt.text(x, y+0.3, '{}:{:.2f}'.format(max_acc_in_Dt_index[i]+2, y))
-    plt.tick_params(labelsize=15)
+        # 上面写堆数，下面写accuracy
+        # plt.text(x, y+0.3, '{}:{:.2f}'.format(max_acc_in_Dt_index[i]+2, y))
+        plt.text(x, y + 0.5, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=13)
+        plt.text(x-0.1, y - 0.8, '{:.2f}'.format(y), fontsize=13)
+    plt.tick_params(labelsize=20)
 
 def Figure():
     fig = plt.figure(figsize=(12, 8))
@@ -101,7 +104,7 @@ def Figure():
     # bbox_to_anchor=[x轴位置， y轴位置]， 大于1就是突出去
     plt.legend(bbox_to_anchor=(0.5,1.04), loc="center", ncol=5)  # 多少个legend就有多个
     # 设置x轴的范围为[a, b]，y轴的范围为[c, d]
-    plt.axis([2, 8, 75.0, 95])
+    # plt.axis([2, 8, 75.0, 95])
 
     # Plot
     # plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.5,
