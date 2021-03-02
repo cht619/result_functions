@@ -364,6 +364,7 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
     ax[1].scatter(data_tsne_1[feas_src_f.shape[0]:][:, 0], data_tsne_1[feas_src_f.shape[0]:][:, 1], s=8, alpha=0.8,
                   marker='o', c='none', edgecolors='blue')  # 画空心图的意思就是只有边框颜色
 
+    # 这里是一起降维，上面是分开降维
     # # Ds
     # ax[1].scatter(
     #     data_tsne_0[:feas_src.shape[0]][:, 0],
