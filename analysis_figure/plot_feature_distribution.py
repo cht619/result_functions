@@ -317,7 +317,7 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
     # 第一张图
     feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
     feas_tgt, labels_tgt = get_feas_labels(root_path, domain_tgt, fea_type)
-    data_tsne = TSNE(np.concatenate((feas_src, feas_tgt), 0))
+    data_tsne_0 = TSNE(np.concatenate((feas_src, feas_tgt), 0))
 
     # 去掉边框
     ax[0].spines['top'].set_visible(False)
@@ -329,10 +329,10 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
 
     ax[0].set_title('(a) None-adapted', y=-0.1, fontdict=font_text)
     # Ds
-    ax[0].scatter(data_tsne[:feas_src.shape[0]][:, 0], data_tsne[:feas_src.shape[0]][:, 1], s=8, alpha=0.8,
+    ax[0].scatter(data_tsne_0[:feas_src.shape[0]][:, 0], data_tsne_0[:feas_src.shape[0]][:, 1], s=8, alpha=0.8,
                color='red', marker='x', )  # s是大小size
     # Dt
-    ax[0].scatter(data_tsne[feas_src.shape[0]:][:, 0], data_tsne[feas_src.shape[0]:][:, 1], s=8, alpha=0.8,
+    ax[0].scatter(data_tsne_0[feas_src.shape[0]:][:, 0], data_tsne_0[feas_src.shape[0]:][:, 1], s=8, alpha=0.8,
                color='blue', marker='x', )
     ax[0].legend(['Ds', 'Dt'], loc='best')
 
@@ -348,35 +348,48 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
     state = torch.load(pth_path)
     feas_src_f = list_to_numpy(state['feas_src_f'])
     feas_tgt_f = list_to_numpy(state['feas_tgt_f'])
-    data_tsne = TSNE(np.concatenate((feas_src, feas_tgt, feas_src_f, feas_tgt_f), 0))
+    data_tsne_1 = TSNE(np.concatenate((feas_src_f, feas_tgt_f), 0))
 
     ax[1].set_title('(b) Adapted', y=-0.1, fontdict=font_text)
     # Ds
-    ax[1].scatter(
-        data_tsne[:feas_src.shape[0]][:, 0],
-        data_tsne[:feas_src.shape[0]][:, 1],
-        s=8, alpha=0.8, color='red', marker='x', )  # s是大小size
+    ax[1].scatter(data_tsne_0[:feas_src.shape[0]][:, 0], data_tsne_0[:feas_src.shape[0]][:, 1], s=8, alpha=0.8,
+                  color='red', marker='x', )  # s是大小size
     # Dt
-    ax[1].scatter(
-        data_tsne[feas_src.shape[0]:feas_src.shape[0] + feas_tgt.shape[0]][:, 0],
-        data_tsne[feas_src.shape[0]:feas_src.shape[0] + feas_tgt.shape[0]][:, 1],
-        s=8, alpha=0.8, color='blue', marker='x', )
+    ax[1].scatter(data_tsne_0[feas_src.shape[0]:][:, 0], data_tsne_0[feas_src.shape[0]:][:, 1], s=8, alpha=0.8,
+                  color='blue', marker='x', )
+    # Ds
+    ax[1].scatter(data_tsne_1[:feas_src_f.shape[0]][:, 0], data_tsne_1[:feas_src_f.shape[0]][:, 1], s=8, alpha=0.8,
+                  marker='o', c='none', edgecolors='red')  #
+    # Dt
+    ax[1].scatter(data_tsne_1[feas_src_f.shape[0]:][:, 0], data_tsne_1[feas_src_f.shape[0]:][:, 1], s=8, alpha=0.8,
+                  marker='o', c='none', edgecolors='blue')  # 画空心图的意思就是只有边框颜色
 
-    # Ds_f
-    ax[1].scatter(
-        data_tsne[feas_src.shape[0] + feas_tgt.shape[0]:feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]][:, 0],
-        data_tsne[feas_src.shape[0] + feas_tgt.shape[0]:feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]][:, 1],
-        s=8, alpha=0.5, color='red', marker='o', )  # s是大小size firebrick
+    # # Ds
+    # ax[1].scatter(
+    #     data_tsne_0[:feas_src.shape[0]][:, 0],
+    #     data_tsne_0[:feas_src.shape[0]][:, 1],
+    #     s=8, alpha=0.8, color='red', marker='x', )  # s是大小size
+    # # Dt
+    # ax[1].scatter(
+    #     data_tsne_0[feas_src.shape[0]:feas_src.shape[0] + feas_tgt.shape[0]][:, 0],
+    #     data_tsne_0[feas_src.shape[0]:feas_src.shape[0] + feas_tgt.shape[0]][:, 1],
+    #     s=8, alpha=0.8, color='blue', marker='x', )
+    #
+    # # Ds_f
+    # ax[1].scatter(
+    #     data_tsne_0[feas_src.shape[0] + feas_tgt.shape[0]:feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]][:, 0],
+    #     data_tsne_0[feas_src.shape[0] + feas_tgt.shape[0]:feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]][:, 1],
+    #     s=8, alpha=0.5, color='red', marker='o', )  # s是大小size firebrick
+    #
+    # # Dt_f
+    # ax[1].scatter(
+    #     data_tsne_0[feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]:][:, 0],
+    #     data_tsne_0[feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]:][:, 1],
+    #     s=8, alpha=0.5, color='blue', marker='o', )  # s是大小size aqua
 
-    # Dt_f
-    ax[1].scatter(
-        data_tsne[feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]:][:, 0],
-        data_tsne[feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]:][:, 1],
-        s=8, alpha=0.5, color='blue', marker='o', )  # s是大小size aqua
-
-    # ax[1].legend(['Ds', 'Dt', 'Ds_f', 'Dt_f'], loc='best')
-    ax[1].legend()
-    plt.tight_layout(w_pad=2)
+    ax[1].legend(['Ds', 'Dt', 'Ds_f', 'Dt_f'], loc='best')
+    # ax[1].legend()
+    plt.tight_layout(w_pad=4)
     plt.savefig('./PNG/none-adapted.jpg', dpi=200)
     plt.show()
 
