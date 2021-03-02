@@ -286,7 +286,7 @@ def plot_clusters_distribution(root_path, domain_src, fea_type='Resnet50', nC_Ds
 
     plt.xticks([])
     plt.yticks([])
-    plt.legend(['Ds', 'Dt'])
+    plt.legend(['Ds', 'Dt'], loc='best')
     plt.savefig('./clusters_kmeans.png')
     plt.show()
 
