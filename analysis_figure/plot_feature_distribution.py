@@ -352,10 +352,10 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
 
     ax[1].set_title('(b) Adapted', y=-0.1, fontdict=font_text)
     # Ds
-    ax[1].scatter(data_tsne_0[:feas_src.shape[0]][:, 0], data_tsne_0[:feas_src.shape[0]][:, 1], s=8, alpha=0.8,
+    ax[1].scatter(data_tsne_0[:feas_src.shape[0]][:, 0], data_tsne_0[:feas_src.shape[0]][:, 1], s=8, alpha=0.5,
                   color='red', marker='x', )  # s是大小size
     # Dt
-    ax[1].scatter(data_tsne_0[feas_src.shape[0]:][:, 0], data_tsne_0[feas_src.shape[0]:][:, 1], s=8, alpha=0.8,
+    ax[1].scatter(data_tsne_0[feas_src.shape[0]:][:, 0], data_tsne_0[feas_src.shape[0]:][:, 1], s=8, alpha=0.5,
                   color='blue', marker='x', )
     # Ds
     ax[1].scatter(data_tsne_1[:feas_src_f.shape[0]][:, 0], data_tsne_1[:feas_src_f.shape[0]][:, 1], s=8, alpha=0.8,
