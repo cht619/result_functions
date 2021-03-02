@@ -312,7 +312,7 @@ def plot_clusters_distribution(root_path, domain_src, fea_type='Resnet50', nC_Ds
 
 
 def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='Resnet50'):
-    fig, ax = plt.subplots(1, 2, figsize=(12, 12))
+    fig, ax = plt.subplots(1, 2, figsize=(12, 6))
 
     # 第一张图
     feas_src, labels_src = get_feas_labels(root_path, domain_src, fea_type)
@@ -347,10 +347,10 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
     # 读取数据
     state = torch.load(pth_path)
     feas_src_f = list_to_numpy(state['feas_src_f'])
-    feas_tgt_f = list_to_numpy(state['feas_src_f'])
+    feas_tgt_f = list_to_numpy(state['feas_tgt_f'])
     data_tsne = TSNE(np.concatenate((feas_src, feas_tgt, feas_src_f, feas_tgt_f), 0))
 
-    ax[0].set_title('(b) Adapted', y=-0.1, fontdict=font_text)
+    ax[1].set_title('(b) Adapted', y=-0.1, fontdict=font_text)
     # Ds
     ax[1].scatter(
         data_tsne[:feas_src.shape[0]][:, 0],
@@ -358,26 +358,25 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
         s=8, alpha=0.8, color='red', marker='x', )  # s是大小size
     # Dt
     ax[1].scatter(
-        data_tsne[feas_src.shape[0]:feas_src.shape[0] + feas_tgt[0]][:, 0],
-        data_tsne[feas_src.shape[0]:feas_src.shape[0] + feas_tgt[0]][:, 1],
+        data_tsne[feas_src.shape[0]:feas_src.shape[0] + feas_tgt.shape[0]][:, 0],
+        data_tsne[feas_src.shape[0]:feas_src.shape[0] + feas_tgt.shape[0]][:, 1],
         s=8, alpha=0.8, color='blue', marker='x', )
 
     # Ds_f
     ax[1].scatter(
-        data_tsne[feas_src.shape[0] + feas_tgt[0]:feas_src.shape[0] + feas_tgt[0] + feas_src_f[0]][:, 0],
-        data_tsne[feas_src.shape[0] + feas_tgt[0]:feas_src.shape[0] + feas_tgt[0] + feas_src_f[0]][:, 1],
-        s=8, alpha=0.8, color='red', marker='o', )  # s是大小size
+        data_tsne[feas_src.shape[0] + feas_tgt.shape[0]:feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]][:, 0],
+        data_tsne[feas_src.shape[0] + feas_tgt.shape[0]:feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]][:, 1],
+        s=8, alpha=0.5, color='red', marker='o', )  # s是大小size firebrick
 
     # Dt_f
     ax[1].scatter(
-        data_tsne[feas_src.shape[0] + feas_tgt[0] + feas_src_f[0]:][:, 0],
-        data_tsne[feas_src.shape[0] + feas_tgt[0] + feas_src_f[0]:][:, 1],
-        s=8, alpha=0.8, color='blue', marker='o', )  # s是大小size
+        data_tsne[feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]:][:, 0],
+        data_tsne[feas_src.shape[0] + feas_tgt.shape[0] + feas_src_f.shape[0]:][:, 1],
+        s=8, alpha=0.5, color='blue', marker='o', )  # s是大小size aqua
 
-    ax[1].legend(['Ds', 'Dt', 'Ds_f', 'Dt_f'], loc='best')
-
-
-
+    # ax[1].legend(['Ds', 'Dt', 'Ds_f', 'Dt_f'], loc='best')
+    ax[1].legend()
+    plt.tight_layout(w_pad=2)
     plt.savefig('./PNG/none-adapted.jpg', dpi=200)
     plt.show()
 
