@@ -57,45 +57,45 @@ def Figure():
     # get data
     accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='A_C',
+        domain_name='C_I',  n_data_mean=10
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[0], label='A-C', marker='o')
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[0], label='C-I', marker='o')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='C_A'
+        domain_name='C_P'
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[1], label='C-A', marker='x')
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[1], label='C-P', marker='x')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='C_I'
+        domain_name='I_P'
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[2], label='C-I', marker='*')
-
-    # accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
-    #     root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-    #     domain_name='Ar_Cl'
-    # )
-    # max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    # plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[3], label='Ar-Cl')
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[2], label='I-P', marker='*')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='B_K'
+        domain_name='I_C'
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[4], label='B-K', marker='^')
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[3], label='I-C', marker='+')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='train_vali'
+        domain_name='P_C'
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[5], label='train-vali', marker='D')
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[4], label='P-C', marker='^')
+
+    accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
+        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+        domain_name='P_I'
+    )
+    max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[5], label='P_I', marker='D')
 
     # plt.title('Multi Component Analysis', fontdict={'weight':'normal','size': 50})
     plt.xlabel('Number of components in Ds', font_text)

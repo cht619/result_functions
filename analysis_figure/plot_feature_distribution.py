@@ -348,15 +348,15 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
     state = torch.load(pth_path)
     feas_src_f = list_to_numpy(state['feas_src_f'])
     feas_tgt_f = list_to_numpy(state['feas_tgt_f'])
-    data_tsne_1 = TSNE(np.concatenate((feas_src_f, feas_tgt_f), 0))
+    data_tsne_1 = TSNE(np.concatenate((feas_src, feas_tgt, feas_src_f, feas_tgt_f), 0))
 
     ax[1].set_title('(b) Adapted', y=-0.1, fontdict=font_text)
     # Ds
-    ax[1].scatter(data_tsne_0[:feas_src.shape[0]][:, 0], data_tsne_0[:feas_src.shape[0]][:, 1], s=8, alpha=0.5,
-                  color='red', marker='x', )  # s是大小size
-    # Dt
-    ax[1].scatter(data_tsne_0[feas_src.shape[0]:][:, 0], data_tsne_0[feas_src.shape[0]:][:, 1], s=8, alpha=0.5,
-                  color='blue', marker='x', )
+    # ax[1].scatter(data_tsne_0[:feas_src.shape[0]][:, 0], data_tsne_0[:feas_src.shape[0]][:, 1], s=8, alpha=0.5,
+    #               color='red', marker='x', )  # s是大小size
+    # # Dt
+    # ax[1].scatter(data_tsne_0[feas_src.shape[0]:][:, 0], data_tsne_0[feas_src.shape[0]:][:, 1], s=8, alpha=0.5,
+    #               color='blue', marker='x', )
     # Ds
     ax[1].scatter(data_tsne_1[:feas_src_f.shape[0]][:, 0], data_tsne_1[:feas_src_f.shape[0]][:, 1], s=8, alpha=0.8,
                   marker='o', c='none', edgecolors='red')  #
