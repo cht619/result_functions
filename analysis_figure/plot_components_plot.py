@@ -57,7 +57,7 @@ def Figure():
     # get data
     accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='C_I',  n_data_mean=10
+        domain_name='C_I',  n_data_mean=10, all_data=12
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
     plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[0], label='C-I', marker='o')
@@ -102,15 +102,10 @@ def Figure():
     plt.ylabel('Accuracy (%)', font_text)
     plt.grid(linestyle='--', linewidth=2)
     # bbox_to_anchor=[x轴位置， y轴位置]， 大于1就是突出去
-    plt.legend(bbox_to_anchor=(0.5,1.04), loc="center", ncol=5)  # 多少个legend就有多个
+    plt.legend(bbox_to_anchor=(0.5,1.04), loc="center", ncol=6)  # 多少个legend就有多个
     # 设置x轴的范围为[a, b]，y轴的范围为[c, d]
     # plt.axis([2, 8, 75.0, 95])
 
-    # Plot
-    # plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.5,
-    #          marker='x', markersize=20)
-    # for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
-    #     plt.text(x, y, '{}'.format(max_acc_in_Dt_index[i]), fontdict=font_text)
 
     plt.savefig('./PNG/plot1.jpg')
     plt.show()

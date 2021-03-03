@@ -155,7 +155,7 @@ def Figure():
     plt.show()
 
 
-def get_mean_clustering_train_plot(root_path, domain_name, n_data_mean=5):
+def get_mean_clustering_train_plot(root_path, domain_name, n_data_mean=5, all_data=7):
 
     # 第一行是参数情况说明
     # 第二行是
@@ -170,8 +170,8 @@ def get_mean_clustering_train_plot(root_path, domain_name, n_data_mean=5):
 
         # print(' {} The M0 Accuracy: {:.3f}'.format(csv_file[:5], float(csv_reader[1][0])), end=' ')
 
-        for i in range(len(csv_reader) // 12):  # 一个文件
-            i = 12*i
+        for i in range(len(csv_reader) // all_data):  # 一个文件
+            i = all_data*i
             data_list = csv_reader[i+2 : i+2+n_data_mean]
             data_list = [float(data[0]) for data in data_list]
             # get clusters
