@@ -352,16 +352,16 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
 
     ax[1].set_title('(b) Adapted', y=-0.1, fontdict=font_text)
     # Ds
-    # ax[1].scatter(data_tsne_0[:feas_src.shape[0]][:, 0], data_tsne_0[:feas_src.shape[0]][:, 1], s=8, alpha=0.5,
-    #               color='red', marker='x', )  # s是大小size
-    # # Dt
-    # ax[1].scatter(data_tsne_0[feas_src.shape[0]:][:, 0], data_tsne_0[feas_src.shape[0]:][:, 1], s=8, alpha=0.5,
-    #               color='blue', marker='x', )
+    ax[1].scatter(data_tsne_0[:feas_src.shape[0]][:, 0], data_tsne_0[:feas_src.shape[0]][:, 1], s=8, alpha=0.5,
+                  color='red', marker='x', )  # s是大小size
+    # Dt
+    ax[1].scatter(data_tsne_0[feas_src.shape[0]:][:, 0], data_tsne_0[feas_src.shape[0]:][:, 1], s=8, alpha=0.5,
+                  color='blue', marker='x', )
     # Ds
-    ax[1].scatter(data_tsne_1[:feas_src_f.shape[0]][:, 0], data_tsne_1[:feas_src_f.shape[0]][:, 1], s=8, alpha=0.8,
+    ax[1].scatter(data_tsne_1[:feas_src_f.shape[0]][:, 0], data_tsne_1[:feas_src_f.shape[0]][:, 1], s=8, alpha=0.5,
                   marker='o', c='none', edgecolors='red')  #
     # Dt
-    ax[1].scatter(data_tsne_1[feas_src_f.shape[0]:][:, 0], data_tsne_1[feas_src_f.shape[0]:][:, 1], s=8, alpha=0.8,
+    ax[1].scatter(data_tsne_1[feas_src_f.shape[0]:][:, 0], data_tsne_1[feas_src_f.shape[0]:][:, 1], s=8, alpha=0.5,
                   marker='o', c='none', edgecolors='blue')  # 画空心图的意思就是只有边框颜色
 
     # 这里是一起降维，上面是分开降维
@@ -391,7 +391,7 @@ def scatter_none_adapter(root_path, domain_src, domain_tgt, pth_path, fea_type='
     ax[1].legend(['Ds', 'Dt', 'Ds_f', 'Dt_f'], loc='best')
     # ax[1].legend()
     plt.tight_layout(w_pad=4)
-    plt.savefig('./PNG/none-adapted.jpg', dpi=200)
+    plt.savefig('./PNG/none-adapted_all.jpg', dpi=200)
     plt.show()
 
 

@@ -46,13 +46,23 @@ def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label,
     for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
         # 注意从2开始，所以是加2
         # 上面写堆数，下面写accuracy
-        # plt.text(x, y+0.3, '{}:{:.2f}'.format(max_acc_in_Dt_index[i]+2, y))
-        plt.text(x, y + 0.5, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=13)
-        plt.text(x-0.1, y - 0.8, '{:.2f}'.format(y), fontsize=13)
+        if label == 'I-C':
+            if i == 0: plt.text(x - 0.1, y + 0.2, '{}({:.2f})'.format(max_acc_in_Dt_index[i]+2, y))
+            else: plt.text(x - 0.1, y - 0.2, '{}({:.2f})'.format(max_acc_in_Dt_index[i] + 2, y))
+        elif label == 'P-C':
+            if i == 0:
+                plt.text(x - 0.2, y - 0.4, '{}({:.2f})'.format(max_acc_in_Dt_index[i] + 2, y))
+            else:
+                plt.text(x - 0.1, y + 0.2, '{}({:.2f})'.format(max_acc_in_Dt_index[i] + 2, y))
+        else:
+            plt.text(x - 0.1, y + 0.2, '{}({:.2f})'.format(max_acc_in_Dt_index[i]+2, y))
+        # plt.text(x, y + 0.2, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=13)
+        # plt.text(x-0.1, y - 0.3, '{:.2f}'.format(y), fontsize=13)
     plt.tick_params(labelsize=20)
 
 def Figure():
     fig = plt.figure(figsize=(12, 8))
+    # plt.axis([2, 8, 75.0, 95])
     # 二维图，把最高Accuracy突出来
     # get data
     accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
@@ -62,19 +72,19 @@ def Figure():
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
     plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[0], label='C-I', marker='o')
 
-    accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='C_P'
-    )
-    max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[1], label='C-P', marker='x')
+    # accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
+    #     root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+    #     domain_name='C_P'
+    # )
+    # max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
+    # plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[1], label='C-P', marker='x')
 
-    accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='I_P'
-    )
-    max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[2], label='I-P', marker='*')
+    # accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
+    #     root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+    #     domain_name='I_P'
+    # )
+    # max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
+    # plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[2], label='I-P', marker='*')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
