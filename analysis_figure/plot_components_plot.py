@@ -41,6 +41,7 @@ def data_preprocess(accuracy_list):
 
 
 def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label, marker):
+    fs = 12
     plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.8, color=color, label=label,
              marker=marker, markersize=10)
     for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
@@ -49,15 +50,37 @@ def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label,
         if label == 'I-C':
             if i == 0: plt.text(x - 0.1, y + 0.2, '{}'.format(max_acc_in_Dt_index[i]+2))
             else: plt.text(x - 0.1, y - 0.2, '{}'.format(max_acc_in_Dt_index[i] + 2))
+
         elif label == 'P-C':
             if i == 0:
                 plt.text(x - 0.2, y - 0.4, '{}'.format(max_acc_in_Dt_index[i] + 2))
             else:
                 plt.text(x - 0.1, y + 0.2, '{}'.format(max_acc_in_Dt_index[i] + 2))
+
         elif label == 'A-W':
-            plt.text(x - 0.1, y - 0.2, '{}'.format(max_acc_in_Dt_index[i] + 2))
+            plt.text(x - 0.1, y - 0.4, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=fs)
+
+        elif label == 'C-W' and (i==4 or i==5):
+            plt.text(x - 0.1, y - 0.4, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=fs)
+
+        elif label == 'C-A':
+            if i == 6:
+                plt.text(x, y + 0.3, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=fs)
+            elif i == 1 or i == 4:
+                plt.text(x, y - 0.3, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=fs)
+            else:
+                plt.text(x - 0.1, y + 0.2, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=fs)
+
+        elif label == 'A-D':
+            if i == 3:
+                plt.text(x, y + 0.1, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=fs)
+            elif i == 6:
+                plt.text(x, y - 0.3, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=fs)
+            else:
+                plt.text(x - 0.1, y + 0.2, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=fs)
+
         else:
-            plt.text(x - 0.1, y + 0.2, '{}'.format(max_acc_in_Dt_index[i]+2))
+            plt.text(x - 0.1, y + 0.2, '{}'.format(max_acc_in_Dt_index[i]+2), fontsize=fs)
         # plt.text(x, y + 0.2, '{}'.format(max_acc_in_Dt_index[i] + 2), fontsize=13)
         # plt.text(x-0.1, y - 0.3, '{:.2f}'.format(y), fontsize=13)
     plt.tick_params(labelsize=20) # 坐标轴字体的大小
@@ -161,7 +184,7 @@ def figure_OfficeCaltech():
         domain_name='W_A'
     )
     max_acc_in_Dt_index, max_acc = data_preprocess(accuracy_list)
-    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[3], label='C-A', marker='+')
+    plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, colors[3], label='W-A', marker='+')
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
