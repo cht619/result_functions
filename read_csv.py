@@ -114,6 +114,7 @@ def get_mean_clustering_train(root_path, n_data_mean=10, all_data=12):
 
     csv_files = os.listdir(root_path)
     pattern = re.compile(r'\d\|\|\d')
+    pre_train_result = []
 
     for csv_file in csv_files: # 一个文件的
         all_result = []
@@ -135,12 +136,17 @@ def get_mean_clustering_train(root_path, n_data_mean=10, all_data=12):
                 result = np.mean(data_list) * 100
                 all_result.append(result)
                 all_std.append(std)
+            pre_train_result.append(csv_reader[1][0])
+            # print(pre_train_result)
 
         # all_result.sort(key=lambda x: x[0], reverse=True)
         # for i in all_result:
         #     print('{:.3}({})'.format(i[0], i[1]))
         max_index = np.argmax(all_result)
         print('{:.1f}±{:.1f}'.format(all_result[int(max_index)], all_std[int(max_index)]), end='\t')
+
+    for i in pre_train_result:
+        print('{:.1f}'.format(pre_train_result[i]), end='\t')
 
 
         #     for i, row in enumerate(csv_reader):
