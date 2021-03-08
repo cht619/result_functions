@@ -107,7 +107,7 @@ def get_mean_standard_deviation_SSDA(root_path, n_data_mean=14):
         print(result, end='\t')
 
 
-def get_mean_clustering_train(root_path, n_data_mean=10):
+def get_mean_clustering_train(root_path, n_data_mean=10, all_data=12):
 
     # 第一行是参数情况说明
     # 第二行是
@@ -123,8 +123,8 @@ def get_mean_clustering_train(root_path, n_data_mean=10):
 
             # print(' {} The M0 Accuracy: {:.3f}'.format(csv_file[:5], float(csv_reader[1][0])), end=' ')
 
-            for i in range(len(csv_reader) // 12):  # 一个文件
-                i = 12*i
+            for i in range(len(csv_reader) // all_data):  # 一个文件
+                i = all_data*i
                 data_list = csv_reader[i+2 : i+2+n_data_mean]
                 data_list = [float(data[0]) for data in data_list]
                 # get clusters
@@ -192,8 +192,10 @@ def get_mean_clustering_train_plot(root_path, n_data_mean=10):
         # print('{}:{:.3}'.format(csv_file[:3],  np.mean(data_list_Dtl3[:n_data_mean])))
 
 if __name__ == '__main__':
-    get_mean_standard_deviation_no_0dtl(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\CDAN\fine_tune、CHT')
+    # get_mean_standard_deviation_no_0dtl(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\CDAN\fine_tune、CHT')
     # get_mean_standard_deviation_SSDA(r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50\SSDA')
-    # get_mean_clustering_train(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment_Dataset\Clustering_Train\greedy\0.03\Greedy_normalization_min_noDlr')
+    get_mean_clustering_train(
+    r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\Clustering_Train\greedy\3.7',
+    n_data_mean=5, all_data=7)
     # get_mean_standard_deviation(r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50\DAN')
     # get_mean_clustering_train_plot(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\1.28')
