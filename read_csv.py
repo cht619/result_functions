@@ -115,13 +115,15 @@ def get_mean_clustering_train(root_path, n_data_mean=10, all_data=12):
     csv_files = os.listdir(root_path)
     pattern = re.compile(r'\d\|\|\d')
     pre_train_result = []
+    domain_name_list = []
 
     for csv_file in csv_files: # 一个文件的
+        domain_name_list.append(csv_file[:-4])
         all_result = []
         all_std = []
         with open(r'{}/{}'.format(root_path, csv_file), 'r') as f:
-            csv_reader = list(csv.reader(f))
 
+            csv_reader = list(csv.reader(f))
             # print(' {} The M0 Accuracy: {:.3f}'.format(csv_file[:5], float(csv_reader[1][0])), end=' ')
 
             for i in range(len(csv_reader) // all_data):  # 一个文件
@@ -145,8 +147,13 @@ def get_mean_clustering_train(root_path, n_data_mean=10, all_data=12):
         max_index = np.argmax(all_result)
         print('{:.1f}±{:.1f}'.format(all_result[int(max_index)], all_std[int(max_index)]), end='\t')
 
+    print('\n')
+    for i in domain_name_list:
+        print(i, end='\t')
+
+    print('\n')
     for i in pre_train_result:
-        print('{:.1f}'.format(pre_train_result[i]), end='\t')
+        print('{:.1f}'.format(float(i) * 100), end='\t')
 
 
         #     for i, row in enumerate(csv_reader):
@@ -201,7 +208,7 @@ if __name__ == '__main__':
     # get_mean_standard_deviation_no_0dtl(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\CDAN\fine_tune、CHT')
     # get_mean_standard_deviation_SSDA(r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50\SSDA')
     get_mean_clustering_train(
-    r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\Clustering_Train\greedy\3.7',
+    r'E:\cht_project\Experimental_Result\ER\Office_Caltech_DeCAF6\Clustering_Train\greedy\3.7',
     n_data_mean=5, all_data=7)
     # get_mean_standard_deviation(r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50\DAN')
     # get_mean_clustering_train_plot(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\1.28')
