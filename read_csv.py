@@ -50,7 +50,7 @@ def get_mean_standard_deviation(root_path, n_data_mean=14):
         print(result, end='\t')
 
 
-def get_mean_standard_deviation_no_0dtl(root_path, n_data_mean=3):
+def get_mean_standard_deviation_no_0dtl(root_path, n_data_mean=5):
     csv_files = os.listdir(root_path)
     all_result = []
 
@@ -205,10 +205,10 @@ def get_mean_clustering_train_plot(root_path, n_data_mean=10):
         # print('{}:{:.3}'.format(csv_file[:3],  np.mean(data_list_Dtl3[:n_data_mean])))
 
 if __name__ == '__main__':
-    # get_mean_standard_deviation_no_0dtl(r'E:\cht_project\Experimental_Result\ER\Multi_Domain_Sentiment\DAN\fine_tune')
+    get_mean_standard_deviation_no_0dtl(r'E:\cht_project\Experimental_Result\DAN\Image_CLEF_Resnet50\MMD_experiment')
     # get_mean_standard_deviation_SSDA(r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50\SSDA')
-    get_mean_clustering_train(
-    r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\3.8',
-    n_data_mean=5, all_data=7)
+    # get_mean_clustering_train(
+    # r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\3.8',
+    # n_data_mean=5, all_data=7)
     # get_mean_standard_deviation(r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50\DAN')
     # get_mean_clustering_train_plot(r'E:\cht_project\Experimental_Result\ER\Office_Home_Resnet50\Clustering_Train\greedy\1.28')

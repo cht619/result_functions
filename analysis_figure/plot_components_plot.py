@@ -42,8 +42,8 @@ def data_preprocess(accuracy_list):
 
 def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label, marker):
     fs = 12
-    plt.plot(list(set(components_in_Ds_list)), max_acc, alpha=0.8, color=color, label=label,
-             marker=marker, markersize=10)
+    plt.colorbar(list(set(components_in_Ds_list)), max_acc, alpha=0.8, color=color, label=label,
+                 marker=marker, markersize=10)
     for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
         # 注意从2开始，所以是加2
         # 上面写堆数，下面写accuracy
