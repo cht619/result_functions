@@ -20,4 +20,4 @@ ax.bar(x, y, zs=1, zdir='y', color='rgb', alpha=0.5)
 ax.bar(x1, x, 4, zdir='y', color='orange', alpha=0.5)
 plt.show()
 
-print(help(plt.bar))
+# print(help(plt.bar))

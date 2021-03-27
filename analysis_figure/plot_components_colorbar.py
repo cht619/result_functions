@@ -27,13 +27,11 @@ font_text = {'family' : 'Times New Roman',
 
 
 def data_preprocess(accuracy_list):
-    # 取每一个聚类的最大出来显示
+    # 把数据交换一下，2本来在最上面改成在最下面
     accuracy_list = np.asarray(accuracy_list).reshape(7, 7)
-    # 0纵1横
-    max_acc_in_Dt_index = np.argmax(accuracy_list, 1)  # index就是Dt的堆数
-    max_acc = np.max(accuracy_list, 1)
-
-    return max_acc_in_Dt_index, max_acc
+    for i in range(len(accuracy_list) // 2):
+        accuracy_list[i] = accuracy_list[-(i+1)]
+    pass
 
 
 def colorbar(accuracy_list, components_in_Ds_list, components_in_Dt_list, fig, figure_index, title):
@@ -41,10 +39,10 @@ def colorbar(accuracy_list, components_in_Ds_list, components_in_Dt_list, fig, f
     min_acc = np.min(accuracy_list)
     max_acc = np.max(accuracy_list)
     x = np.asarray(accuracy_list).reshape(7, 7)
-    ax.set_title(title)
-    # ax.set_xticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Ds_list)))
-    # ax.set_yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
-    img = ax.imshow(x, cmap=plt.cm.jet, vmin=min_acc, vmax=max_acc)
+    # ax.set_title(title)
+    # ax.set_xticklabels([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Ds_list)))
+    # ax.set_yticklabels([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
+    img = ax.matshow(x, cmap=plt.cm.cool, vmin=min_acc, vmax=max_acc)
     # ax.colorbar()
     plt.colorbar(img, ax=ax)
 
@@ -59,7 +57,7 @@ def Figure():
     )
     colorbar(accuracy_list, components_in_Ds_list, components_in_Dt_list, fig, figure_index=221, title='A-C')
     plt.xticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
-    plt.yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)).reverse())
+    plt.yticks([0, 1, 2, 3, 4, 5, 6], [8, 7, 6, 5, 4, 3, 2].reverse())
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
@@ -67,7 +65,7 @@ def Figure():
     )
     colorbar(accuracy_list, components_in_Ds_list, components_in_Dt_list, fig, figure_index=222, title='C-A')
     plt.xticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
-    plt.yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)).reverse())
+    plt.yticks([0, 1, 2, 3, 4, 5, 6], [8, 7, 6, 5, 4, 3, 2])
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
@@ -75,7 +73,7 @@ def Figure():
     )
     colorbar(accuracy_list, components_in_Ds_list, components_in_Dt_list, fig, figure_index=223, title='C-I')
     plt.xticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
-    plt.yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)).reverse())
+    plt.yticks([0, 1, 2, 3, 4, 5, 6], [8, 7, 6, 5, 4, 3, 2])
 
     accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
         root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
@@ -83,7 +81,7 @@ def Figure():
     )
     colorbar(accuracy_list, components_in_Ds_list, components_in_Dt_list, fig, figure_index=224, title='Ar-Cl')
     plt.xticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
-    plt.yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)).reverse())
+    plt.yticks([0, 1, 2, 3, 4, 5, 6], [8, 7, 6, 5, 4, 3, 2])
 
     # accuracy_list, components_of_Ds_list, components_of_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
     #     root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
@@ -105,8 +103,40 @@ def Figure():
     plt.savefig('./PNG/colorbar.png', bbox_inches='tight')
     plt.show()
 
+
+def Figure_1(data_path, domain_name, title):
+    # plt.figure(figsize=(12, 12), dpi=100)  # 定义大小
+    fig, ax = plt.subplots(figsize=(12, 12))
+    # print(help(plt.cm))
+
+    accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
+        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+        domain_name='A_C',
+    )
+    min_acc = np.min(accuracy_list)
+    max_acc = np.max(accuracy_list)
+    accuracy_list = np.asarray(accuracy_list).reshape(7, 7)
+
+    # plt.set_xticks([2, 3, 4, 5, 6, 7, 8])
+    # ax.set_yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
+    # ax.set_yticks([2, 3, 4, 5, 6, 7, 8])
+    ax.set_title('A-C', y=-0.05, fontsize=12)
+    sns.heatmap(
+        accuracy_list, vmin=min_acc, vmax=max_acc, ax=ax, cmap=plt.cm.cool,
+        xticklabels=[2, 3, 4, 5, 6, 7, 8], yticklabels=list(set(components_in_Dt_list)))
+    # plt.xticks([0, 1, 2, 3, 4, 5, 6], [2, 3, 4, 5, 6, 7, 8])
+    # ax.set_yticks(list(set(components_in_Dt_list)))
+
+    # ax.set_xticks([2, 3, 4, 5, 6, 7, 8])
+    plt.savefig('./PNG/colorbar/A_C.png', bbox_inches='tight')
+    plt.show()
+
+
 if __name__ == '__main__':
-    Figure()
+
+    # Figure()
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+        domain_name='A_C', title='A-C')
     # accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
     #     root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
     #     domain_name='A_C',
