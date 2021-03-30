@@ -155,7 +155,7 @@ def Figure():
     plt.show()
 
 
-def get_mean_clustering_train_plot(root_path, domain_name, n_data_mean=10, all_data=12):
+def get_mean_clustering_train_plot(root_path, domain_name, n_data_mean=5, all_data=7):
 
     # 第一行是参数情况说明
     # 第二行是

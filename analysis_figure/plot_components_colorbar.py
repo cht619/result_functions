@@ -104,31 +104,34 @@ def Figure():
     plt.show()
 
 
-def Figure_1(data_path, domain_name, title):
+def Figure_1(data_path, domain_name, title, n_data_mean=5, ):
     # plt.figure(figsize=(12, 12), dpi=100)  # 定义大小
     fig, ax = plt.subplots(figsize=(12, 12))
     # print(help(plt.cm))
 
     accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
-        root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='A_C',
+        root_path=data_path, domain_name=domain_name, n_data_mean=n_data_mean, all_data=n_data_mean+2
     )
     min_acc = np.min(accuracy_list)
     max_acc = np.max(accuracy_list)
+    # xlim(min, max)就是现实的范围
     accuracy_list = np.asarray(accuracy_list).reshape(7, 7)
 
     # plt.set_xticks([2, 3, 4, 5, 6, 7, 8])
     # ax.set_yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
     # ax.set_yticks([2, 3, 4, 5, 6, 7, 8])
-    ax.set_title('A-C', y=-0.05, fontsize=12)
+    ax.set_title(title, y=-0.05, fontsize=12)
     sns.heatmap(
         accuracy_list, vmin=min_acc, vmax=max_acc, ax=ax, cmap=plt.cm.cool,
         xticklabels=[2, 3, 4, 5, 6, 7, 8], yticklabels=list(set(components_in_Dt_list)))
     # plt.xticks([0, 1, 2, 3, 4, 5, 6], [2, 3, 4, 5, 6, 7, 8])
     # ax.set_yticks(list(set(components_in_Dt_list)))
+    # ax.invert_yaxis() # y轴数据调转
+    ax.xaxis.tick_top()  # x轴放到最上面
+
 
     # ax.set_xticks([2, 3, 4, 5, 6, 7, 8])
-    plt.savefig('./PNG/colorbar/A_C.png', bbox_inches='tight')
+    plt.savefig('./PNG/colorbar/{}.png'.format(domain_name), bbox_inches='tight')
     plt.show()
 
 
@@ -136,7 +139,30 @@ if __name__ == '__main__':
 
     # Figure()
     Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='A_C', title='A-C')
+        domain_name='A_C', title='A-C', n_data_mean=10)
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='C_A', title='C-A', n_data_mean=10)
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='A_D', title='A-D', n_data_mean=10)
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='W_A', title='W-A', n_data_mean=10)
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='C_P', title='C-P')
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='C_I', title='C-I', n_data_mean=10)
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='I_C', title='I-C')
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='I_P', title='I_P')
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='P_C', title='P-C')
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='P_I', title='P-I')
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='Ar_Cl', title='Ar-Cl', n_data_mean=10)
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+             domain_name='Pr_Rw', title='Pr-Rw', n_data_mean=10)
+
     # accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
     #     root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
     #     domain_name='A_C',
