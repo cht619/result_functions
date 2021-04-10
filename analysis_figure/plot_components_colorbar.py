@@ -16,8 +16,9 @@ import seaborn as sns
 
 
 font1 = {'family' : 'Times New Roman',
-'weight' : 'normal', 'color':'black',
-'size'  : 15,
+'weight' : 'bold', # 字体加速
+ 'color':'black',
+'size'  : 30,
 }
 
 font_text = {'family' : 'Times New Roman',
@@ -105,6 +106,7 @@ def Figure():
 
 
 def Figure_1(data_path, domain_name, title, n_data_mean=5, ):
+    # n_data_mean就是每一个情况有多少个个数据，然后取平均。
     # plt.figure(figsize=(12, 12), dpi=100)  # 定义大小
     fig, ax = plt.subplots(figsize=(12, 12))
     # print(help(plt.cm))
@@ -120,14 +122,31 @@ def Figure_1(data_path, domain_name, title, n_data_mean=5, ):
     # plt.set_xticks([2, 3, 4, 5, 6, 7, 8])
     # ax.set_yticks([0, 1, 2, 3, 4, 5, 6], list(set(components_in_Dt_list)))
     # ax.set_yticks([2, 3, 4, 5, 6, 7, 8])
-    ax.set_title(title, y=-0.05, fontsize=12)
-    sns.heatmap(
+    ax.set_title(title, y=-0.05, fontdict=font1)
+    cbar = sns.heatmap(
         accuracy_list, vmin=min_acc, vmax=max_acc, ax=ax, cmap=plt.cm.cool,
+        annot=False,  # 每个格子要不要显示数据
+        cbar=True, # 要不要右边那个柱子
+        # 设置cbar的各类属性
+        cbar_kws={'format': '%.2f'},
         xticklabels=[2, 3, 4, 5, 6, 7, 8], yticklabels=list(set(components_in_Dt_list)))
     # plt.xticks([0, 1, 2, 3, 4, 5, 6], [2, 3, 4, 5, 6, 7, 8])
     # ax.set_yticks(list(set(components_in_Dt_list)))
     # ax.invert_yaxis() # y轴数据调转
+
+    #
+    print(len(ax.figure.axes))
+    cbar_axes = ax.figure.axes[1]  # 获取最后一列
+    cbar_axes.tick_params(labelsize=30)
+    # 设置图例大小
+    # cb = cbar.figure.colorbar(cbar.collections[0])  # 显示colorbar
+    # cb.ax.tick_params(labelsize=28)  # 设置colorbar刻度字体大小。
+
+    # 坐标轴设置
     ax.xaxis.tick_top()  # x轴放到最上面
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
 
 
     # ax.set_xticks([2, 3, 4, 5, 6, 7, 8])
@@ -138,30 +157,30 @@ def Figure_1(data_path, domain_name, title, n_data_mean=5, ):
 if __name__ == '__main__':
 
     # Figure()
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-        domain_name='A_C', title='A-C', n_data_mean=10)
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='C_A', title='C-A', n_data_mean=10)
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='A_D', title='A-D', n_data_mean=10)
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='W_A', title='W-A', n_data_mean=10)
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='C_P', title='C-P')
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='C_I', title='C-I', n_data_mean=10)
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='I_C', title='I-C')
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='I_P', title='I_P')
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='P_C', title='P-C')
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='P_I', title='P-I')
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='Ar_Cl', title='Ar-Cl', n_data_mean=10)
-    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
-             domain_name='Pr_Rw', title='Pr-Rw', n_data_mean=10)
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
+    #     domain_name='C_I', title='C-I', n_data_mean=3)
+    Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
+             domain_name='C_P', title='C-P', n_data_mean=3)
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
+    #          domain_name='I_P', title='I-P', n_data_mean=3)
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
+    #          domain_name='I_C', title='I-C', n_data_mean=3)
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
+    #          domain_name='P_C', title='P-C', n_data_mean=3)
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
+    #          domain_name='P_I', title='P-I', n_data_mean=3)
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+    #          domain_name='I_C', title='I-C')
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+    #          domain_name='I_P', title='I_P')
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+    #          domain_name='P_C', title='P-C')
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+    #          domain_name='P_I', title='P-I')
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+    #          domain_name='Ar_Cl', title='Ar-Cl', n_data_mean=10)
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
+    #          domain_name='Pr_Rw', title='Pr-Rw', n_data_mean=10)
 
     # accuracy_list, components_in_Ds_list, components_in_Dt_list = plot_components_analysis.get_mean_clustering_train_plot(
     #     root_path=r'E:\cht_project\Experimental_Result\ER\Figure_analysis',
