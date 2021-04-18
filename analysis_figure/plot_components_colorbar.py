@@ -135,7 +135,7 @@ def Figure_1(data_path, domain_name, title, n_data_mean=5, ):
     # ax.invert_yaxis() # y轴数据调转
 
     #
-    print(len(ax.figure.axes))
+    # print(len(ax.figure.axes))
     cbar_axes = ax.figure.axes[1]  # 获取最后一列
     cbar_axes.tick_params(labelsize=30)
     # 设置图例大小
@@ -157,10 +157,10 @@ def Figure_1(data_path, domain_name, title, n_data_mean=5, ):
 if __name__ == '__main__':
 
     # Figure()
-    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
-    #     domain_name='C_I', title='C-I', n_data_mean=3)
     Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
-             domain_name='C_P', title='C-P', n_data_mean=3)
+        domain_name='C_I', title='C-I', n_data_mean=3)
+    # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
+    #          domain_name='C_P', title='C-P', n_data_mean=3)
     # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',
     #          domain_name='I_P', title='I-P', n_data_mean=3)
     # Figure_1(data_path=r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MMD\3.30',

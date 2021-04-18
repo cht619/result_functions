@@ -206,7 +206,7 @@ def get_mean_clustering_train_plot(root_path, n_data_mean=10):
 
 if __name__ == '__main__':
     get_mean_clustering_train(
-        r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\MCADA\4.9', n_data_mean=3, all_data=5)
+        r'E:\cht_project\Experimental_Result\ER\Office_Caltech_DeCAF6\MCADA\4.11', n_data_mean=5, all_data=7)
     # get_mean_standard_deviation_no_0dtl(r'E:\cht_project\Experimental_Result\DAN\Image_CLEF_Resnet50\MMD_experiment')
     # get_mean_standard_deviation_SSDA(r'E:\cht_project\Experimental_Result\ER\VisDA_Resnet50\SSDA')
     # get_mean_clustering_train(
