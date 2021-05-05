@@ -29,6 +29,7 @@ cmap = mpl.cm.get_cmap('RdBu', 7)
 # colors = cmap(np.linspace(0, 1, 7))  # 获取7种颜色
 colors = ['black', 'orange', 'green', 'blue', 'blueviolet', 'red']
 
+
 def data_preprocess(accuracy_list):
     # 取每一个聚类的最大出来显示
     accuracy_list = [data * 100 for data in accuracy_list]
@@ -42,8 +43,8 @@ def data_preprocess(accuracy_list):
 
 def plot(plt, max_acc_in_Dt_index, max_acc, components_in_Ds_list, color, label, marker):
     fs = 12
-    plt.colorbar(list(set(components_in_Ds_list)), max_acc, alpha=0.8, color=color, label=label,
-                 marker=marker, markersize=10)
+    # plt.colorbar(list(set(components_in_Ds_list)), max_acc, alpha=0.8, color=color, label=label,
+    #              marker=marker, markersize=10)
     for i, (x, y) in enumerate(zip(list(set(components_in_Ds_list)), max_acc)):
         # 注意从2开始，所以是加2
         # 上面写堆数，下面写accuracy
@@ -107,7 +108,7 @@ def Figure():
     # plt.axis([2, 8, 75.0, 95])
 
 
-    plt.savefig('./PNG/plot1.jpg')
+    plt.savefig('./PNG/plot_Office_Caltech.jpg')
     plt.show()
 
 
