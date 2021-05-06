@@ -26,9 +26,9 @@ font_text = {'family' : 'Times New Roman',
 }
 
 cmap_names = ["viridis", "RdBu", "Set1", "jet"]  # 定义色板，方便使用！这里一共是4种风格
-cmap = mpl.cm.get_cmap('RdBu', 7)
-# colors = cmap(np.linspace(0, 1, 7))  # 获取7种颜色
-colors = ['black', 'orange', 'green', 'blue', 'blueviolet', 'red', 'yellow']
+cmap = mpl.cm.get_cmap('jet', 7)
+colors = cmap(np.linspace(0, 1, 7))  # 获取7种颜色
+# colors = ['black', 'orange', 'green', 'blue', 'blueviolet', 'red', '#c8fd3d']
 markers = ['o', 'x', '+', '*', '^', 'D', 's']
 
 
@@ -61,6 +61,11 @@ def data_preprocess_Acc(accuracy_list):
     return accuracy_list
 
 
+def sort_list(kl_list, acc_list):
+    sort_index = np.argsort(kl_list)
+    return np.asarray(kl_list)[sort_index], np.asarray(acc_list)[sort_index]
+
+
 def plot_KL_Acc(plt, acc_best_list, kl_best_list):
     # index = np.argsort(kl_list)  # 记住第一个点是第几堆的
     # kl_list = np.sort(kl_list)
@@ -74,19 +79,41 @@ def plot_KL_Acc(plt, acc_best_list, kl_best_list):
              # markerfacecolor='brown')  # 点的填充色
              #    linestyle = '-',  # 折线类型
              #    linewidth = 2,  # 折线宽度
+    # 选取min 和 max
+    index = [0, -1]
+    kl_min_list = []
+    kl_max_list = []
+    acc_min_list = []
+    acc_max_list = []
+
     for i in range(len(acc_best_list)):
         # 同样对KL排序,升序
-        # if True:
-        if i in [ 1, 2]:
-            sort_index = np.argsort(kl_best_list[i])
-            kl_list = np.asarray(kl_best_list[i])[sort_index]
-            acc_list = np.asarray(acc_best_list[i])[sort_index]
-            plt.plot(kl_list,  # x轴数据
-                     acc_list,  # y轴数据
-                     color=colors[i],  # 折线颜色
-                     marker=markers[i],  # 点的形状
-                     markersize=6,  # 点的大小
-                     label='N={}'.format(i+2), )
+        # if i in [ 1, 2, 6]:
+        sort_index = np.argsort(kl_best_list[i])
+        kl_list = np.asarray(kl_best_list[i])[sort_index][index]
+        acc_list = np.asarray(acc_best_list[i])[sort_index][index]
+        kl_min_list.append(kl_list[0])
+        kl_max_list.append(kl_list[1])
+        acc_min_list.append(acc_list[1])
+        acc_max_list.append(acc_list[1])
+
+    # 两条曲线
+    # 上面取完数据，同样必须排序
+    kl_min_list, acc_min_list = sort_list(kl_min_list, acc_min_list)
+    plt.plot(kl_min_list,  # x轴数据
+             acc_min_list,  # y轴数据
+             color=colors[0],  # 折线颜色
+             marker=markers[0],  # 点的形状
+             markersize=6,  # 点的大小
+             label='Min' )
+
+    kl_max_list, acc_max_list = sort_list(kl_max_list, acc_max_list)
+    plt.plot(kl_max_list,  # x轴数据
+             acc_max_list,  # y轴数据
+             color=colors[5],  # 折线颜色
+             marker=markers[1],  # 点的形状
+             markersize=6,  # 点的大小
+             label='Max')
 
 
 
@@ -102,7 +129,7 @@ def figure_ImageCLEF_kl_sum():
     # plot_KL_Acc(plt, acc_best_list=acc_best_list, kl_best_list=kl_best_list)
 
     acc_best_list, kl_best_list = data_preprocess_KL(
-        r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\Clustering_Train\KL_acc\5.5', 'I_C.csv')
+        r'E:\cht_project\Experimental_Result\ER\Image_CLEF_Resnet50\Clustering_Train\KL_acc\5.5', 'C_P.csv')
     acc_best_list = data_preprocess_Acc(acc_best_list)
     plot_KL_Acc(plt, acc_best_list=acc_best_list, kl_best_list=kl_best_list)
 
@@ -119,7 +146,7 @@ def Figure():
     # ImageCLEF
     figure_ImageCLEF_kl_sum()
 
-    plt.title('I-C')
+    plt.title('C-P')
     plt.xlabel('KL', font_text)
     plt.ylabel('Accuracy (%)', font_text)
     plt.grid(linestyle='--', linewidth=2)
@@ -129,7 +156,7 @@ def Figure():
     # plt.axis([2, 8, 75.0, 95])
 
 
-    plt.savefig('./PNG/KL/KL_I_C.jpg')
+    plt.savefig('./PNG/KL/KL_C_P.jpg')
     plt.show()
 
 
