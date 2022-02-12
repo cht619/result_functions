@@ -263,7 +263,11 @@ def get_mean_standard_VisDA12(root_path, n_data_mean=5):
     for csv_file in csv_files:
         data = np.loadtxt(os.path.join(root_path, csv_file), delimiter=',')
         data = data[np.lexsort(-data.T)]  # 根据最后一列的大小进行排序，更多做法再到网上查
-        print(data)
+        data_result = data[: n_data_mean, :]
+        data_mean = np.mean(data_result, 0)
+        data_std = np.std(data_result, axis=0, ddof=1)
+        for i in range(len(data_mean)):
+            print('{:.1f}±{:.1f}'.format(data_mean[i], data_std[i]), end='\t')
 
     #     std_3 = np.std(data_list[:n_data_mean], ddof=1)* 100
     #
