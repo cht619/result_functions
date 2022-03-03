@@ -268,6 +268,7 @@ def get_mean_standard_VisDA12(root_path, n_data_mean=5):
         data_std = np.std(data_result, axis=0, ddof=1)
         for i in range(len(data_mean)):
             print('{:.1f}±{:.1f}'.format(data_mean[i], data_std[i]), end='\t')
+    print('\n')
 
     #     std_3 = np.std(data_list[:n_data_mean], ddof=1)* 100
     #
@@ -283,13 +284,48 @@ def get_mean_standard_VisDA12(root_path, n_data_mean=5):
     #     print(result, end='\t')
 
 
+def read_DG_result(root_path, n_data_mean=3):
+    # column_index = 0, 2, 4
+    csv_files = os.listdir(root_path)
+    for csv_file in csv_files:
+        data = np.loadtxt(os.path.join(root_path, csv_file), delimiter=',')
+        data = data[np.lexsort(-data.T)]  # 根据最后一列的大小进行排序，更多做法再到网上查
+        data_result = data[: n_data_mean, :]
+        data_mean = np.mean(data_result, 0)
+        data_std = np.std(data_result, axis=0, ddof=1)
+
+        print('{} Acc:{:.2f}±{:.2f} H-score:{:.2f}±{:.2f} Caa:{:.2f}±{:.2f}'.format(
+            csv_file, data_mean[0], data_std[0], data_mean[2], data_std[2], data_mean[4], data_std[4]))
+
 
 if __name__ == '__main__':
-    get_mean_standard_VisDA12(r'F:\Python_project\Experimental_Result\VisDA\DAN\0211')
+    # get_mean_standard_VisDA12(r'F:\Python_project\Experimental_Result\VisDA\DAN\0211')
     # get_mean_clustering_train(
     #     r'F:\Python_project\Experimental_Result\Office_Caltech\MCADA\pre_train_fine_tune_523', n_data_mean=3, all_data=4)
-    # get_mean_standard_deviation_TAT_pseudo_labels(
-    #     r'F:\Python_project\Experimental_Result\MIMIC3\Phenotyping\Age\LSTM', n_data_mean=5)
+
+    read_DG_result(r'F:\Python_project\Experimental_Result\DG\TAT\0303', n_data_mean=5)
+
+
+    # get_mean_standard_deviation_no_0dtl(
+    #     r'F:\Python_project\Experimental_Result\Ori_feas\ImageCLEF\ATPL\0225_resnet18_for_ori', n_data_mean=3)
+    # print('\n')
+    # get_mean_standard_deviation_no_0dtl(
+    #     r'F:\Python_project\Experimental_Result\Ori_feas\Office31\TAT\0224_resnet18_for_ori', n_data_mean=3)
+    # print('\n')
+    # get_mean_standard_deviation_no_0dtl(
+    #     r'F:\Python_project\Experimental_Result\Ori_feas\ImageCLEF\CDAN\0224_resnet18_for_ori', n_data_mean=3)
+    # print('\n')
+    # get_mean_standard_deviation_no_0dtl(
+    #     r'F:\Python_project\Experimental_Result\Ori_feas\ImageCLEF\RDA\0224_resnet18_for_ori', n_data_mean=3)
+    # print('\n')
+    # get_mean_standard_deviation_no_0dtl(
+    #     r'F:\Python_project\Experimental_Result\Ori_feas\ImageCLEF\TSA\0224_resnet18_for_ori', n_data_mean=3)
+    # print('\n')
+    # get_mean_standard_deviation_no_0dtl(
+    #     r'F:\Python_project\Experimental_Result\Ori_feas\ImageCLEF\TAT\0224_resnet18_for_ori', n_data_mean=3)
+    # print('\n')
+    # get_mean_standard_deviation_no_0dtl(
+    #     r'F:\Python_project\Experimental_Result\Ori_feas\ImageCLEF\ATPL\0224_resnet18_for_ori', n_data_mean=3)
 
     # read_mimic3(r'F:\Python_project\Experimental_Result\MIMIC3\in_hosptial_mortality\Age\DANN\1130\seq_1', n_data_mean=5)
     # print('overall_caa')
@@ -301,7 +337,7 @@ if __name__ == '__main__':
     # print('\n')
     # read_mimic3(r'F:\Python_project\Experimental_Result\MIMIC3\in_hosptial_mortality\DANN\Age\1218', n_data_mean=5)
     # print('\n')
-    # read_mimic3(r'F:\Python_project\Experimental_Result\MIMIC3\in_hosptial_mortality\LSTM\Age\1218', n_data_mean=5)
+    # read_mimic3(r'F:\Python_project\Experimental_Result\MIMIC3\mode\CMADA\0213_seed0', n_data_mean=5)
     #
     #
     # print('\n')
